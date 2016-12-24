@@ -1,14 +1,14 @@
 package org.suzuki.communication.tcp.server;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class TCPServerMessageHandlingThread extends Thread {
 
     private TCPServer.JsonMessageHandler jsonMessageHandler;
 
-    private ConcurrentLinkedQueue<String> messageQueue;
+    private LinkedBlockingQueue<String> messageQueue;
 
-    public TCPServerMessageHandlingThread(TCPServer.JsonMessageHandler jsonMessageHandler, ConcurrentLinkedQueue<String> messageQueue) {
+    public TCPServerMessageHandlingThread(TCPServer.JsonMessageHandler jsonMessageHandler, LinkedBlockingQueue<String> messageQueue) {
         this.jsonMessageHandler = jsonMessageHandler;
         this.messageQueue = messageQueue;
     }
@@ -16,7 +16,11 @@ public class TCPServerMessageHandlingThread extends Thread {
     @Override
     public void run() {
         while(true) {
-            jsonMessageHandler.handleJsonMessage(messageQueue.poll());
+            try {
+                jsonMessageHandler.handleJsonMessage(messageQueue.take());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);  //TODO exception handling
+            }
         }
     }
 }

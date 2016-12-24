@@ -1,7 +1,7 @@
 package org.suzuki.communication.tcp.server;
 
-import org.suzuki.communication.tcp.exception.MessageReadException;
-import org.suzuki.communication.tcp.exception.ServerStartException;
+import org.suzuki.communication.tcp.server.exception.MessageReadException;
+import org.suzuki.communication.tcp.server.exception.ServerStartException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,13 +9,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class TCPServerListeningThread extends Thread {
 
-    private ConcurrentLinkedQueue<String> messageQueue;
+    public static final int PORT = 2345;
 
-    TCPServerListeningThread(ConcurrentLinkedQueue<String> messageQueue) {
+    private LinkedBlockingQueue<String> messageQueue;
+
+    TCPServerListeningThread(LinkedBlockingQueue<String> messageQueue) {
         this.messageQueue = messageQueue;
     }
 
@@ -55,7 +57,7 @@ public class TCPServerListeningThread extends Thread {
         Socket connectionSocket = null;
         try {
             // start server
-            welcomeSocket = startServer(2345);
+            welcomeSocket = startServer(PORT);
 
             while(true) {
                 // accept connection

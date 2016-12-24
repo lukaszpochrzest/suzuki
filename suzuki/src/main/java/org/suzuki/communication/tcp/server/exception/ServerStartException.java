@@ -1,4 +1,4 @@
-package org.suzuki.communication.tcp.exception;
+package org.suzuki.communication.tcp.server.exception;
 
 public class ServerStartException extends RuntimeException {
     public ServerStartException() {

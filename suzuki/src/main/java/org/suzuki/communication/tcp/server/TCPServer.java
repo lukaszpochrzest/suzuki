@@ -1,7 +1,6 @@
 package org.suzuki.communication.tcp.server;
 
-import java.io.IOException;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class TCPServer {
 
@@ -12,7 +11,7 @@ public class TCPServer {
 
     private JsonMessageHandler jsonMessageHandler;
 
-    private ConcurrentLinkedQueue<String> messageQueue;
+    private LinkedBlockingQueue<String> messageQueue;
 
     private TCPServerListeningThread tcpServerListeningThread;
 
@@ -22,8 +21,19 @@ public class TCPServer {
         this.jsonMessageHandler = jsonMessageHandler;
     }
 
+    public void start() {
+        initiate();
+        tcpServerListeningThread.start();
+        tcpServerMessageHandlingThread.start();
+    }
+
+    public void close() {
+        tcpServerListeningThread.interrupt();
+        tcpServerMessageHandlingThread.interrupt();
+    }
+
     private void initiate() {
-        messageQueue = new ConcurrentLinkedQueue<>();
+        messageQueue = new LinkedBlockingQueue<>();
 
         tcpServerListeningThread = new TCPServerListeningThread(messageQueue);
         tcpServerListeningThread.setUncaughtExceptionHandler(
@@ -34,17 +44,6 @@ public class TCPServer {
         );
 
         tcpServerMessageHandlingThread = new TCPServerMessageHandlingThread(jsonMessageHandler, messageQueue);
-    }
-
-    public void start() throws IOException {
-        initiate();
-        tcpServerListeningThread.start();
-        tcpServerMessageHandlingThread.start();
-    }
-
-    public void close() {
-        tcpServerListeningThread.interrupt();
-        tcpServerMessageHandlingThread.interrupt();
     }
 
 }

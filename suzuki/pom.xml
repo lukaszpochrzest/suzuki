@@ -51,7 +51,7 @@
                             </descriptorRefs>
                             <archive>
                                 <manifest>
-                                    <mainClass>org.suzuki.Suzuki</mainClass>
+                                    <mainClass>org.suzuki.Main</mainClass>
                                 </manifest>
                             </archive>
                         </configuration>
