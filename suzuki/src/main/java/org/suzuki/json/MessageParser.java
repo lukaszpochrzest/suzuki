@@ -7,7 +7,7 @@ import org.suzuki.data.Message;
 import org.suzuki.data.SuzukiRequest;
 import org.suzuki.data.SuzukiToken;
 
-public class Parser {
+public class MessageParser {
 
     private static Gson gson = new Gson();
 

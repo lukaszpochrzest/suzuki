@@ -1,7 +1,7 @@
 package org.suzuki.json;
 
 import org.suzuki.MessageHandler;
-import org.suzuki.communication.tcp.server.TCPServer;
+import org.suzuki.algorithm.communication.tcp.server.TCPServer;
 import org.suzuki.data.Message;
 import org.suzuki.data.visitor.MessageVisitor;
 
@@ -15,7 +15,7 @@ public class JsonToObjectMessageMappingHandler implements TCPServer.JsonMessageH
 
     @Override
     public void handleJsonMessage(String jsonMessage) {
-        Message messageObject = Parser.toObject(jsonMessage);
+        Message messageObject = MessageParser.toObject(jsonMessage);
 
         messageObject.accept(messageVisitor);
     }

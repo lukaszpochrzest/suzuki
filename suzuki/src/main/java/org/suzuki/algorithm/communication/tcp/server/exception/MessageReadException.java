@@ -1,4 +1,4 @@
-package org.suzuki.communication.tcp.server.exception;
+package org.suzuki.algorithm.communication.tcp.server.exception;
 
 public class MessageReadException extends RuntimeException {
     public MessageReadException() {

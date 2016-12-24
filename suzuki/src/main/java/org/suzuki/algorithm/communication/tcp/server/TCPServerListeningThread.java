@@ -1,7 +1,7 @@
-package org.suzuki.communication.tcp.server;
+package org.suzuki.algorithm.communication.tcp.server;
 
-import org.suzuki.communication.tcp.server.exception.MessageReadException;
-import org.suzuki.communication.tcp.server.exception.ServerStartException;
+import org.suzuki.algorithm.communication.tcp.server.exception.MessageReadException;
+import org.suzuki.algorithm.communication.tcp.server.exception.ServerStartException;
 
 import java.io.BufferedReader;
 import java.io.IOException;

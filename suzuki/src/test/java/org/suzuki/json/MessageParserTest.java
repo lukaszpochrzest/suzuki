@@ -8,17 +8,17 @@ import org.suzuki.data.SuzukiRequest;
 import org.suzuki.data.SuzukiToken;
 import org.suzuki.util.MessageGenerator;
 
-public class ParserTest {
+public class MessageParserTest {
 
     @Test
     public void should_CreateRequestObject_When_ReceivedRequestJson() {
         // given
         SuzukiRequest suzukiRequest = MessageGenerator.generateRequest();
 
-        String json = Parser.toJson(suzukiRequest);
+        String json = MessageParser.toJson(suzukiRequest);
 
         // when
-        Message message = Parser.toObject(json);
+        Message message = MessageParser.toObject(json);
 
         // then
         Assert.assertTrue(message instanceof SuzukiRequest);
@@ -33,10 +33,10 @@ public class ParserTest {
         // given
         SuzukiToken suzukiToken = MessageGenerator.generateToken();
 
-        String json = Parser.toJson(suzukiToken);
+        String json = MessageParser.toJson(suzukiToken);
 
         // when
-        Message message = Parser.toObject(json);
+        Message message = MessageParser.toObject(json);
 
         // then
         Assert.assertTrue(message instanceof SuzukiToken);

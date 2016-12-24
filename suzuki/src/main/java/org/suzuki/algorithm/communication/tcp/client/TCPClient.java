@@ -1,6 +1,6 @@
-package org.suzuki.communication.tcp.client;
+package org.suzuki.algorithm.communication.tcp.client;
 
-import org.suzuki.communication.tcp.client.Exception.SendException;
+import org.suzuki.algorithm.communication.tcp.client.Exception.SendException;
 
 import java.io.*;
 import java.net.Socket;

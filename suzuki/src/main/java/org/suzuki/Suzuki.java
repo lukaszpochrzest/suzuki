@@ -1,7 +1,7 @@
 package org.suzuki;
 
-import org.suzuki.communication.tcp.server.TCPServer;
-import org.suzuki.json.JsonToObjectMessageMappingHandler;
+import org.suzuki.algorithm.SuzukiAlgorithm;
+import org.suzuki.config.Config;
 
 public class Suzuki {
 
@@ -10,30 +10,23 @@ public class Suzuki {
         void run();
     }
 
-    public Suzuki(Integer n) {
-        this.RN = new int[n];
+    private SuzukiAlgorithm suzukiAlgorithm;
+
+    public Suzuki(Config config) {
+        suzukiAlgorithm = new SuzukiAlgorithm(config);
     }
 
-    // util data TODO refactor
-
-    private TCPServer tcpServer;
-
-    //  algorithm data TODO refactor
-
-    private final int[] RN;
 
     public void launch() {
-        tcpServer = new TCPServer(new JsonToObjectMessageMappingHandler(new MessageHandlerImpl(RN)));
-        tcpServer.start();
+        suzukiAlgorithm.launch();
     }
 
     public void executeLocked(RunnableWithResource runnableWithResource) {
-
-        runnableWithResource.run();
+        suzukiAlgorithm.executeLocked(runnableWithResource);
     }
 
     public void close() {
-        tcpServer.close();
+        suzukiAlgorithm.close();
     }
 
 }
