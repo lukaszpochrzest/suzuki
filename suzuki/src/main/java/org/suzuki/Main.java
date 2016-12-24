@@ -10,7 +10,13 @@ import java.io.Console;
 public class Main {
 
     public static void main(String[] args) {
-        Suzuki suzuki = new Suzuki();
+
+        //TODO
+//        Config config = new Config();
+//        Integer n = config.getNodes().size();
+        Integer n = 2;
+
+        Suzuki suzuki = new Suzuki(n);  //TODO arg
         suzuki.launch();
 
         TCPClient tcpClient = new TCPClient("localhost", TCPServerListeningThread.PORT);    //TODO arguments

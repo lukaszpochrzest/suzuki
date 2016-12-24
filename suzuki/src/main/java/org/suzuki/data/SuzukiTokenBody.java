@@ -11,4 +11,8 @@ public class SuzukiTokenBody {
     @Setter
     private List<SuzukiTokenBodyElement> lastRequests;
 
+    @Getter
+    @Setter
+    private int[] queue;
+
 }

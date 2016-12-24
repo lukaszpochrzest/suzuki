@@ -7,6 +7,12 @@ import org.suzuki.data.SuzukiToken;
 
 public class MessageHandlerImpl implements MessageHandler {
 
+    private final int RN[];
+
+    public MessageHandlerImpl(int[] RN) {
+        this.RN = RN;
+    }
+
     @Override
     public void handle(SuzukiRequest suzukiRequest) {
         System.out.println("Handling suzukiRequest");

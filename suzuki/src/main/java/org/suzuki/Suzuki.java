@@ -10,10 +10,20 @@ public class Suzuki {
         void run();
     }
 
+    public Suzuki(Integer n) {
+        this.RN = new int[n];
+    }
+
+    // util data TODO refactor
+
     private TCPServer tcpServer;
 
+    //  algorithm data TODO refactor
+
+    private final int[] RN;
+
     public void launch() {
-        tcpServer = new TCPServer(new JsonToObjectMessageMappingHandler(new MessageHandlerImpl()));
+        tcpServer = new TCPServer(new JsonToObjectMessageMappingHandler(new MessageHandlerImpl(RN)));
         tcpServer.start();
     }
 
