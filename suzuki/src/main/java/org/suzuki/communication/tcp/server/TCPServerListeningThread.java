@@ -1,5 +1,8 @@
 package org.suzuki.communication.tcp.server;
 
+import org.suzuki.communication.tcp.exception.MessageReadException;
+import org.suzuki.communication.tcp.exception.ServerStartException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,15 +19,15 @@ public class TCPServerListeningThread extends Thread {
         this.messageQueue = messageQueue;
     }
 
-    private ServerSocket startServer(int port) throws TCPServer.ServerStartException {
+    private ServerSocket startServer(int port) throws ServerStartException {
         try {
             return new ServerSocket(port);
         } catch(IOException e) {
-            throw new TCPServer.ServerStartException(e);
+            throw new ServerStartException(e);
         }
     }
 
-    private void readMessage(InputStream inputStream) throws TCPServer.MessageReadException {
+    private void readMessage(InputStream inputStream) throws MessageReadException {
         try {
             // use buffered reader
             BufferedReader inFromClient =
@@ -42,7 +45,7 @@ public class TCPServerListeningThread extends Thread {
             // add to queue
             messageQueue.offer(message);
         } catch (IOException e) {
-            throw new TCPServer.MessageReadException(e);
+            throw new MessageReadException(e);
         }
     }
 
@@ -61,9 +64,9 @@ public class TCPServerListeningThread extends Thread {
                 // read message
                 readMessage(connectionSocket.getInputStream()); //TODO this need to be in threads
             }
-        } catch (TCPServer.MessageReadException e){
+        } catch (MessageReadException e){
             throw new RuntimeException(e);  //TODO some custom handling
-        } catch (TCPServer.ServerStartException e) {
+        } catch (ServerStartException e) {
             throw new RuntimeException(e);  //TODO some custom handling
         } catch (IOException e) {
             throw new RuntimeException(e);  //TODO some custom handling
