@@ -13,11 +13,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class TCPServerListeningThread extends Thread {
 
-    public static final int PORT = 2345;
-
     private LinkedBlockingQueue<String> messageQueue;
 
-    TCPServerListeningThread(LinkedBlockingQueue<String> messageQueue) {
+    private int port;
+
+    TCPServerListeningThread(int port, LinkedBlockingQueue<String> messageQueue) {
+        this.port = port;
         this.messageQueue = messageQueue;
     }
 
@@ -42,7 +43,6 @@ public class TCPServerListeningThread extends Thread {
                 sb.append(line);//.append("\n");
             }
             String message = sb.toString();
-            System.out.println("Received: " + message);
 
             // add to queue
             messageQueue.offer(message);
@@ -57,7 +57,7 @@ public class TCPServerListeningThread extends Thread {
         Socket connectionSocket = null;
         try {
             // start server
-            welcomeSocket = startServer(PORT);
+            welcomeSocket = startServer(port);
 
             while(true) {
                 // accept connection

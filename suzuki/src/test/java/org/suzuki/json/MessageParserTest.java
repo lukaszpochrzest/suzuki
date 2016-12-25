@@ -3,17 +3,21 @@ package org.suzuki.json;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
+import org.suzuki.config.Config;
+import org.suzuki.config.ConfigParser;
 import org.suzuki.data.Message;
 import org.suzuki.data.SuzukiRequest;
 import org.suzuki.data.SuzukiToken;
-import org.suzuki.util.MessageGenerator;
+import org.suzuki.util.DataGenerator;
+
+import javax.xml.crypto.Data;
 
 public class MessageParserTest {
 
     @Test
     public void should_CreateRequestObject_When_ReceivedRequestJson() {
         // given
-        SuzukiRequest suzukiRequest = MessageGenerator.generateRequest();
+        SuzukiRequest suzukiRequest = DataGenerator.generateRequest();
 
         String json = MessageParser.toJson(suzukiRequest);
 
@@ -31,7 +35,7 @@ public class MessageParserTest {
     @Test
     public void should_CreateTokenObject_When_ReceivedTokenJson() {
         // given
-        SuzukiToken suzukiToken = MessageGenerator.generateToken();
+        SuzukiToken suzukiToken = DataGenerator.generateToken();
 
         String json = MessageParser.toJson(suzukiToken);
 
@@ -44,9 +48,19 @@ public class MessageParserTest {
         Assert.assertThat(casted.getSenderId(), CoreMatchers.equalTo(suzukiToken.getSenderId()));
         Assert.assertThat(casted.getValue().getLastRequests().size(),
                 CoreMatchers.equalTo(suzukiToken.getValue().getLastRequests().size()));
-        Assert.assertThat(casted.getValue().getQueue().length,
-                CoreMatchers.equalTo(suzukiToken.getValue().getQueue().length));
+        Assert.assertThat(casted.getValue().getQueue().size(),
+                CoreMatchers.equalTo(suzukiToken.getValue().getQueue().size()));
     }
+
+//    @Test
+//    public void generateConfigJson() {
+//        Config config = DataGenerator.generateConfig();
+//
+//        String json = ConfigParser.toJson(config);
+//
+//        System.out.println(json);
+//
+//    }
 
 
 }

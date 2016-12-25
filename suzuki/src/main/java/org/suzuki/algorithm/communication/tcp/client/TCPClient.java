@@ -1,6 +1,8 @@
 package org.suzuki.algorithm.communication.tcp.client;
 
 import org.suzuki.algorithm.communication.tcp.client.Exception.SendException;
+import org.suzuki.data.Message;
+import org.suzuki.json.MessageParser;
 
 import java.io.*;
 import java.net.Socket;
@@ -16,6 +18,10 @@ public class TCPClient {
     public TCPClient(String host, int port) {
         this.host = host;
         this.port = port;
+    }
+
+    public void send(Message message) {
+        send(MessageParser.toJson(message));
     }
 
 

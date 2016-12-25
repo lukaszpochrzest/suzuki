@@ -6,6 +6,8 @@ public class CmdLineParser {
 
     public static final String ARG_CONFIG = "config";
 
+    public static final String ARG_TOKEN = "token";
+
     private Options options = new Options();
 
     private HelpFormatter formatter = new HelpFormatter();
@@ -19,7 +21,15 @@ public class CmdLineParser {
                         .hasArg()
                         .argName("file")
                         .desc("config file")
-                        .build());
+                        .build()
+        );
+        options.addOption(
+                Option.builder()
+                        .longOpt(ARG_TOKEN)
+                        .optionalArg(true)
+                        .desc("pretends to have token at startup")
+                        .build()
+        );
     }
 
     public CommandLine getLine(String[] args) throws ParseException {

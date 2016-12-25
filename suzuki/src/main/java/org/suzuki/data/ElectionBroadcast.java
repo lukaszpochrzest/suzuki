@@ -2,7 +2,7 @@ package org.suzuki.data;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.suzuki.data.visitor.MessageVisitor;
+import org.suzuki.algorithm.queue.suzuki.SuzukiEventVisitor;
 
 public class ElectionBroadcast extends Message {
 
@@ -14,7 +14,7 @@ public class ElectionBroadcast extends Message {
     }
 
     @Override
-    public void accept(MessageVisitor messageVisitor) {
-        messageVisitor.visit(this);
+    public void accept(SuzukiEventVisitor suzukiEventVisitor) {
+        suzukiEventVisitor.visit(this);
     }
 }

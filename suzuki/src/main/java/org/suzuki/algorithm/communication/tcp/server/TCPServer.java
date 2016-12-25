@@ -17,7 +17,10 @@ public class TCPServer {
 
     private TCPServerMessageHandlingThread tcpServerMessageHandlingThread;
 
-    public TCPServer(JsonMessageHandler jsonMessageHandler) {
+    private int port;
+
+    public TCPServer(int port, JsonMessageHandler jsonMessageHandler) {
+        this.port = port;
         this.jsonMessageHandler = jsonMessageHandler;
     }
 
@@ -33,9 +36,12 @@ public class TCPServer {
     }
 
     private void initiate() {
+
+        //TODO message queue seems to be unnecessery now. we can push all messages to event queue directly
+
         messageQueue = new LinkedBlockingQueue<>();
 
-        tcpServerListeningThread = new TCPServerListeningThread(messageQueue);
+        tcpServerListeningThread = new TCPServerListeningThread(port, messageQueue);
         tcpServerListeningThread.setUncaughtExceptionHandler(
                 (th,ex) -> {
                     System.out.println("Uncaught exception: " + ex);

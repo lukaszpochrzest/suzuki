@@ -1,6 +1,6 @@
 package org.suzuki.data;
 
-import org.suzuki.data.visitor.MessageVisitor;
+import org.suzuki.algorithm.queue.suzuki.SuzukiEventVisitor;
 
 public class ElectionOK extends Message {
 
@@ -8,8 +8,8 @@ public class ElectionOK extends Message {
     }
 
     @Override
-    public void accept(MessageVisitor messageVisitor) {
-        messageVisitor.visit(this);
+    public void accept(SuzukiEventVisitor suzukiEventVisitor) {
+        suzukiEventVisitor.visit(this);
     }
 
 }

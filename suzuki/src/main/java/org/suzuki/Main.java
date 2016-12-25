@@ -13,7 +13,7 @@ import org.suzuki.ui.SuzukiLogo;
 import org.suzuki.ui.exception.NoConfigException;
 import org.suzuki.ui.io.FileReader;
 import org.suzuki.ui.io.exception.FileReadException;
-import org.suzuki.util.MessageGenerator;
+import org.suzuki.util.DataGenerator;
 
 import java.io.Console;
 
@@ -30,15 +30,17 @@ public class Main {
                 throw new NoConfigException();
             }
 
-            String configFile = FileReader.read(CmdLineParser.ARG_CONFIG);
+            String configFile = FileReader.read(line.getOptionValue(CmdLineParser.ARG_CONFIG));
             Config config = ConfigParser.parse(configFile);
             // TODO
 //                ConfigValidator.validate(config);
 
-            Suzuki suzuki = new Suzuki(config);
+            Suzuki suzuki = line.hasOption(CmdLineParser.ARG_TOKEN) ?
+                    new Suzuki(config, DataGenerator.generateInitialToken(config)) :
+                    new Suzuki(config);
             suzuki.launch();
 
-            TCPClient tcpClient = new TCPClient("localhost", TCPServerListeningThread.PORT);    //TODO arguments
+            TCPClient tcpClient = new TCPClient("localhost", config.getPort());    //TODO arguments
 
             Console console = System.console();
             while(true) {
@@ -50,7 +52,9 @@ public class Main {
                     suzuki.close();
                     System.exit(0);
                 } else if("request".equals(s)) {
-                    String suzukiRequestJson = MessageParser.toJson(MessageGenerator.generateRequest());
+                    suzuki.executeLocked(() -> System.out.println("Accessing resource... done."));
+                }  else if("debugRequest".equals(s)) {
+                    String suzukiRequestJson = MessageParser.toJson(DataGenerator.generateRequest());
                     tcpClient.send(suzukiRequestJson);
                 } else {
                     System.out.println("No such command");

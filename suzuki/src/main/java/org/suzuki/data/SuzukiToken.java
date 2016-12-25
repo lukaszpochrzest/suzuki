@@ -2,8 +2,10 @@ package org.suzuki.data;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.suzuki.data.visitor.MessageVisitor;
+import lombok.ToString;
+import org.suzuki.algorithm.queue.suzuki.SuzukiEventVisitor;
 
+@ToString
 public class SuzukiToken extends Message {
 
     @Getter
@@ -11,11 +13,12 @@ public class SuzukiToken extends Message {
     private SuzukiTokenBody value;
 
     public SuzukiToken() {
+        type = TYPE_TOKEN;
     }
 
     @Override
-    public void accept(MessageVisitor messageVisitor) {
-        messageVisitor.visit(this);
+    public void accept(SuzukiEventVisitor suzukiEventVisitor) {
+        suzukiEventVisitor.visit(this);
     }
 
 }

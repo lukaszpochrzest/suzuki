@@ -1,6 +1,7 @@
 package org.suzuki.config;
 
-public class ConfigUtil {
+// TODO move these functions to class
+public class ConfigUtils {
 
     public static int getIndexOf(int nodeId, Config config) {
 
@@ -13,7 +14,10 @@ public class ConfigUtil {
         }
 
         throw new RuntimeException("Could not find nod with id:" + nodeId + " in config:" + config);
+    }
 
+    public static int getNodeIdFor(int nodeIndex, Config config) {
+        return config.getNodes().get(nodeIndex).getId();
     }
 
 }
