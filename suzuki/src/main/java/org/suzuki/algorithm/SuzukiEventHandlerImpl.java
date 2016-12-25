@@ -2,6 +2,7 @@ package org.suzuki.algorithm;
 
 import org.suzuki.Suzuki;
 import org.suzuki.algorithm.communication.Sender;
+import org.suzuki.algorithm.logging.SuzukiLogger;
 import org.suzuki.algorithm.queue.suzuki.SuzukiEventHandler;
 import org.suzuki.algorithm.utils.SuzukiRequestBuilder;
 import org.suzuki.config.Config;
@@ -23,9 +24,7 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler {
     private Suzuki.RunnableWithResource runnableWithResource;
 
     private RN RN;
-//    private int[] RN;
 
-//    private int myIndex;
     private int myId;
 
     private Config config;
@@ -46,7 +45,6 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler {
 
     private void initialize(Config config) {
         this.config = config;
-//        this.myIndex = indexOf(config.getMyId());
         this.myId = config.getMyId();
         this.RN = new RN(config);
 
@@ -57,8 +55,7 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler {
 
     @Override
     public void handle(SuzukiRequest suzukiRequest) {
-        System.out.println("Handling suzukiRequest...");
-        System.out.println(suzukiRequest);
+        SuzukiLogger.startEventHandling(suzukiRequest);
 
 
         int senderId = suzukiRequest.getSenderId();
@@ -85,13 +82,13 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler {
                 suzukiToken = null;
             }
         }
-        System.out.println("Handling suzukiRequest... done." + " RN: " + RN);
+//        System.out.println("Handling suzukiRequest... done." + " RN: " + RN);
+        SuzukiLogger.stopEventHandling();
     }
 
     @Override
     public void handle(SuzukiToken suzukiToken) {
-        System.out.println("Handling suzukiToken...");
-        System.out.println(suzukiToken);
+        SuzukiLogger.startEventHandling(suzukiToken);
 
         this.suzukiToken = suzukiToken;
 
@@ -110,7 +107,8 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler {
             this.suzukiToken = null;
         }
 
-        System.out.println("Handling suzukiToken... done." + " SuzukiToken: " + suzukiToken);
+//        System.out.println("Handling suzukiToken... done." + " SuzukiToken: " + suzukiToken);
+        SuzukiLogger.stopEventHandling();
     }
 
     @Override
@@ -127,8 +125,7 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler {
 
     @Override
     public void handle(RequestCS requestCS) {
-        System.out.println("Handling requestCS...");
-        System.out.println(requestCS);
+        SuzukiLogger.startEventHandling(requestCS);
 
         this.runnableWithResource = requestCS.getRunnableWithResource();
 
@@ -136,7 +133,8 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler {
         RN.setNumber(myId, myUpdatedNumber);
         sender.broadcast(config.getMyId(), suzukiRequestBuilder.build(myUpdatedNumber));
 
-        System.out.println("Handling requestCS... done." + " RN: " + RN);
+//        System.out.println("Handling requestCS... done." + " RN: " + RN);
+        SuzukiLogger.stopEventHandling();
     }
 
     /**
@@ -158,10 +156,6 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler {
         }
 
         return result;
-    }
-
-    private int indexOf(int nodeId) {
-        return config.getIndexOf(nodeId);
     }
 
 }

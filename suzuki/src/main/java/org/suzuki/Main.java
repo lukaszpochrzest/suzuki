@@ -4,6 +4,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 import org.suzuki.algorithm.communication.tcp.client.TCPClient;
 import org.suzuki.algorithm.communication.tcp.server.TCPServerListeningThread;
+import org.suzuki.algorithm.logging.SuzukiLogger;
 import org.suzuki.config.Config;
 import org.suzuki.config.ConfigParser;
 import org.suzuki.config.exception.ConfigParseException;
@@ -52,7 +53,7 @@ public class Main {
                     suzuki.close();
                     System.exit(0);
                 } else if("request".equals(s)) {
-                    suzuki.executeLocked(() -> System.out.println("Accessing resource... done."));
+                    suzuki.executeLocked(() -> SuzukiLogger.log("Accessing resource... done."));
                 }  else if("debugRequest".equals(s)) {
                     String suzukiRequestJson = MessageParser.toJson(DataGenerator.generateRequest());
                     tcpClient.send(suzukiRequestJson);
