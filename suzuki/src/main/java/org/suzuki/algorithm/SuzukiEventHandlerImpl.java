@@ -5,7 +5,6 @@ import org.suzuki.algorithm.communication.Sender;
 import org.suzuki.algorithm.queue.suzuki.SuzukiEventHandler;
 import org.suzuki.algorithm.utils.SuzukiRequestBuilder;
 import org.suzuki.config.Config;
-import org.suzuki.config.ConfigUtils;
 import org.suzuki.data.ElectionBroadcast;
 import org.suzuki.data.ElectionOK;
 import org.suzuki.data.SuzukiRequest;
@@ -66,11 +65,11 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler {
         // if thing
         if(suzukiToken != null) {  // not in CS cause its single threaded
 
-            if(RN[processIndex] == TokenUtils.numberOf(suzukiRequest.getSenderId(), suzukiToken) + 1) {
+            if(RN[processIndex] == suzukiToken.numberOf(suzukiRequest.getSenderId()) + 1) {
                 sender.send(suzukiRequest.getSenderId(), suzukiToken);
 
                 // TODO remove
-                if(RN[processIndex] > TokenUtils.numberOf(suzukiRequest.getSenderId(), suzukiToken) + 1) {
+                if(RN[processIndex] > suzukiToken.numberOf(suzukiRequest.getSenderId()) + 1) {
                     throw new RuntimeException();
                 }
                 // TODO remove
@@ -91,9 +90,9 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler {
         runnableWithResource.run();
         runnableWithResource = null;
 
-        TokenUtils.setNumber(config.getMyId(), RN[myIndex], suzukiToken);
+        suzukiToken.setNumber(config.getMyId(), RN[myIndex]);
 
-        TokenUtils.appendProcesses(outstandingRequestProcesses(RN, suzukiToken), suzukiToken);
+        suzukiToken.appendProcesses(outstandingRequestProcesses(RN, suzukiToken));
 
         if(!suzukiToken.getValue().getQueue().isEmpty()) {
             int nodeId = suzukiToken.getValue().getQueue().get(0);
@@ -135,8 +134,8 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler {
     private List<Integer> outstandingRequestProcesses(int[] RN, SuzukiToken suzukiToken) {
         List<Integer> result = new LinkedList<>();
         for(int k = 0 ; k < RN.length; ++k) {
-            int nodeId = ConfigUtils.getNodeIdFor(k, config);
-            int tokenNumber = TokenUtils.numberOf(nodeId, suzukiToken);
+            int nodeId = config.getNodeIdFor(k);
+            int tokenNumber = suzukiToken.numberOf(nodeId);
             if(RN[k] == tokenNumber + 1) {
                 result.add(nodeId);
             }
@@ -145,7 +144,7 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler {
     }
 
     private int indexOf(int nodeId) {
-        return ConfigUtils.getIndexOf(nodeId, config);
+        return config.getIndexOf(nodeId);
     }
 
 }
