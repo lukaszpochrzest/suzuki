@@ -1,6 +1,6 @@
-package org.suzuki.algorithm.communication;
+package org.suzuki.communication;
 
-import org.suzuki.algorithm.communication.tcp.server.TCPServer;
+import org.suzuki.communication.tcp.server.TCPServer;
 import org.suzuki.algorithm.queue.EventQueue;
 import org.suzuki.data.Message;
 import org.suzuki.json.MessageParser;

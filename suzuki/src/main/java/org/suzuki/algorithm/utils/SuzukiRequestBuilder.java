@@ -1,6 +1,7 @@
 package org.suzuki.algorithm.utils;
 
 import org.suzuki.config.Config;
+import org.suzuki.config.ConfigHolder;
 import org.suzuki.data.SuzukiRequest;
 import org.suzuki.data.SuzukiRequestBody;
 
@@ -9,8 +10,8 @@ public class SuzukiRequestBuilder {
     private Config config;
 
 
-    public SuzukiRequestBuilder(Config config) {
-        this.config = config;
+    public SuzukiRequestBuilder() {
+        this.config = ConfigHolder.getConfig();
     }
 
     public SuzukiRequest build(int requestNumber) {

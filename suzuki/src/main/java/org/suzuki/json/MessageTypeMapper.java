@@ -1,8 +1,6 @@
 package org.suzuki.json;
 
-import org.suzuki.data.Message;
-import org.suzuki.data.SuzukiRequest;
-import org.suzuki.data.SuzukiToken;
+import org.suzuki.data.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,11 +11,10 @@ public class MessageTypeMapper {
 
     public MessageTypeMapper() {
         typeMap = new HashMap<>();
-
-        typeMap.put("request", SuzukiRequest.class);
-        typeMap.put("token", SuzukiToken.class);
-
-        //TODO election
+        typeMap.put(Message.TYPE_REQUEST, SuzukiRequest.class);
+        typeMap.put(Message.TYPE_TOKEN, SuzukiToken.class);
+        typeMap.put(Message.TYPE_ELECTION_BROADCAST, ElectionBroadcast.class);
+        typeMap.put(Message.TYPE_ELECTION_OK, ElectionOK.class);
     }
 
     public Class<? extends Message> classOf(String type) {

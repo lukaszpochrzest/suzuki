@@ -1,7 +1,6 @@
 package org.suzuki;
 
 import org.suzuki.algorithm.SuzukiAlgorithm;
-import org.suzuki.config.Config;
 import org.suzuki.data.SuzukiToken;
 
 public class Suzuki {
@@ -14,13 +13,13 @@ public class Suzuki {
     private SuzukiAlgorithm suzukiAlgorithm;
 
 
-    public Suzuki(Config config) {
-        suzukiAlgorithm = new SuzukiAlgorithm(config);
+    public Suzuki() {
+        suzukiAlgorithm = new SuzukiAlgorithm();
     }
 
     // hack until election algorithm is implemented TODO remove
-    public Suzuki(Config config, SuzukiToken suzukiToken) {
-        suzukiAlgorithm = new SuzukiAlgorithm(config, suzukiToken);
+    public Suzuki(SuzukiToken suzukiToken) {
+        suzukiAlgorithm = new SuzukiAlgorithm(suzukiToken);
     }
 
 
@@ -34,6 +33,11 @@ public class Suzuki {
 
     public void close() {
         suzukiAlgorithm.close();
+    }
+
+    @Deprecated
+    public void triggerElection() {
+        suzukiAlgorithm.triggerElection();
     }
 
 }

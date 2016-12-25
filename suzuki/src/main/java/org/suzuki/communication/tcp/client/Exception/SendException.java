@@ -1,4 +1,4 @@
-package org.suzuki.algorithm.communication.tcp.client.Exception;
+package org.suzuki.communication.tcp.client.Exception;
 
 public class SendException extends RuntimeException {
     public SendException() {

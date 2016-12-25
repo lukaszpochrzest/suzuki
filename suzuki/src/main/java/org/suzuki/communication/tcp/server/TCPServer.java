@@ -1,4 +1,4 @@
-package org.suzuki.algorithm.communication.tcp.server;
+package org.suzuki.communication.tcp.server;
 
 import java.util.concurrent.LinkedBlockingQueue;
 

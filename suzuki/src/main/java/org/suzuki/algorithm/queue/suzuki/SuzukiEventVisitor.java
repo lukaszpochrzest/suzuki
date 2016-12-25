@@ -4,6 +4,7 @@ import org.suzuki.data.ElectionBroadcast;
 import org.suzuki.data.ElectionOK;
 import org.suzuki.data.SuzukiRequest;
 import org.suzuki.data.SuzukiToken;
+import org.suzuki.data.internal.ElectionStart;
 import org.suzuki.data.internal.RequestCS;
 
 public class SuzukiEventVisitor {
@@ -32,6 +33,10 @@ public class SuzukiEventVisitor {
 
     public void visit(RequestCS requestCS) {
         suzukiEventHandler.handle(requestCS);
+    }
+
+    public void visit(ElectionStart electionStart) {
+        suzukiEventHandler.handle(electionStart);
     }
 
 }

@@ -1,8 +1,9 @@
-package org.suzuki.algorithm.communication;
+package org.suzuki.communication;
 
-import org.suzuki.algorithm.communication.tcp.client.TCPClient;
+import org.suzuki.communication.tcp.client.TCPClient;
 import org.suzuki.algorithm.logging.SuzukiLogger;
 import org.suzuki.config.Config;
+import org.suzuki.config.ConfigHolder;
 import org.suzuki.config.NodeConfig;
 import org.suzuki.data.Message;
 
@@ -10,8 +11,8 @@ public class Sender {
 
     private Config config;
 
-    public Sender(Config config) {
-        this.config = config;
+    public Sender() {
+        this.config = ConfigHolder.getConfig();
     }
 
     public void broadcast(int myId, Message message) {

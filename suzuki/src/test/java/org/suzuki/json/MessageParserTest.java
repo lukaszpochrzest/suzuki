@@ -3,14 +3,10 @@ package org.suzuki.json;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
-import org.suzuki.config.Config;
-import org.suzuki.config.ConfigParser;
 import org.suzuki.data.Message;
 import org.suzuki.data.SuzukiRequest;
 import org.suzuki.data.SuzukiToken;
 import org.suzuki.util.DataGenerator;
-
-import javax.xml.crypto.Data;
 
 public class MessageParserTest {
 

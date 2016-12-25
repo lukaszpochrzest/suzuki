@@ -1,6 +1,7 @@
 package org.suzuki.algorithm;
 
 import org.suzuki.config.Config;
+import org.suzuki.config.ConfigHolder;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -11,8 +12,9 @@ public class RN {
     // <nodeId, number>
     private LinkedHashMap<Integer, Integer> RN;
 
-    public RN(Config config) {
+    public RN() {
         // initialize map
+        Config config = ConfigHolder.getConfig();
         RN = new LinkedHashMap<>((int) Math.ceil(config.getNodes().size() / 0.75));
         config.getNodes().forEach(
                 node -> RN.put(node.getId(), 0)

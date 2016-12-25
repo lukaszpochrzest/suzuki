@@ -1,6 +1,6 @@
-package org.suzuki.algorithm.communication.tcp.client;
+package org.suzuki.communication.tcp.client;
 
-import org.suzuki.algorithm.communication.tcp.client.Exception.SendException;
+import org.suzuki.communication.tcp.client.Exception.SendException;
 import org.suzuki.data.Message;
 import org.suzuki.json.MessageParser;
 

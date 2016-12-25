@@ -1,23 +1,26 @@
 package org.suzuki.algorithm;
 
 import org.suzuki.Suzuki;
-import org.suzuki.algorithm.communication.Sender;
 import org.suzuki.algorithm.logging.SuzukiLogger;
 import org.suzuki.algorithm.queue.suzuki.SuzukiEventHandler;
 import org.suzuki.algorithm.utils.SuzukiRequestBuilder;
+import org.suzuki.communication.Sender;
 import org.suzuki.config.Config;
+import org.suzuki.config.ConfigHolder;
 import org.suzuki.data.ElectionBroadcast;
 import org.suzuki.data.ElectionOK;
 import org.suzuki.data.SuzukiRequest;
 import org.suzuki.data.SuzukiToken;
+import org.suzuki.data.internal.ElectionStart;
 import org.suzuki.data.internal.RequestCS;
+import org.suzuki.election.ElectionManager;
+import org.suzuki.util.DataGenerator;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class SuzukiEventHandlerImpl implements SuzukiEventHandler {
+public class SuzukiEventHandlerImpl implements SuzukiEventHandler, ElectionManager.ElectedListener {
 
     private SuzukiToken suzukiToken;
 
@@ -33,24 +36,29 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler {
 
     private Sender sender;
 
+    // TODO refactor election handling
+    private ElectionManager electionManager;
+
     // hack until election algorithm is implemented TODO remove
-    public SuzukiEventHandlerImpl(Config config, SuzukiToken suzukiToken) {
+    public SuzukiEventHandlerImpl(SuzukiToken suzukiToken) {
         this.suzukiToken = suzukiToken;
-        initialize(config);
+        initialize();
     }
 
-    public SuzukiEventHandlerImpl(Config config) {
-        initialize(config);
+    public SuzukiEventHandlerImpl() {
+        initialize();
     }
 
-    private void initialize(Config config) {
-        this.config = config;
+    private void initialize() {
+        this.config = ConfigHolder.getConfig();
         this.myId = config.getMyId();
-        this.RN = new RN(config);
+        this.RN = new RN();
 
-        this.sender = new Sender(config);
+        this.sender = new Sender();
 
-        this.suzukiRequestBuilder = new SuzukiRequestBuilder(config);
+        this.suzukiRequestBuilder = new SuzukiRequestBuilder();
+
+        this.electionManager = new ElectionManager(sender, this);
     }
 
     @Override
@@ -111,21 +119,35 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler {
         SuzukiLogger.stopEventHandling();
     }
 
+    // TODO refactor election handling
     @Override
     public void handle(ElectionBroadcast electionBroadcast) {
-        throw new UnsupportedOperationException();
-//            System.out.println("Handling electionBroadcast");
+        SuzukiLogger.startEventHandling(electionBroadcast);
+
+        electionManager.handle(electionBroadcast);
+
+        SuzukiLogger.stopEventHandling();
     }
 
+    // TODO refactor election handling
     @Override
     public void handle(ElectionOK electionOK) {
-        throw new UnsupportedOperationException();
-//            System.out.println("Handling electionOK");
+        //TODO logger for election
+        SuzukiLogger.startEventHandling(electionOK);
+
+        electionManager.handle(electionOK);
+
+        SuzukiLogger.stopEventHandling();
     }
 
     @Override
     public void handle(RequestCS requestCS) {
         SuzukiLogger.startEventHandling(requestCS);
+
+        if(suzukiToken != null) {
+            requestCS.getRunnableWithResource().run();
+            return;
+        }
 
         this.runnableWithResource = requestCS.getRunnableWithResource();
 
@@ -135,6 +157,29 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler {
 
 //        System.out.println("Handling requestCS... done." + " RN: " + RN);
         SuzukiLogger.stopEventHandling();
+    }
+
+    @Override
+    public void handle(ElectionStart electionStart) {
+        //TODO logger for election
+        SuzukiLogger.startEventHandling(electionStart);
+
+        electionManager.handle(electionStart);
+
+        //  not necessary should iit here //TODO another mssage for this one
+        electionManager.electionBroadcast();
+
+        SuzukiLogger.stopEventHandling();
+    }
+
+    @Override
+    public void onElected() {
+
+        //TODO logger for election
+        SuzukiLogger.log("\nElected");
+        suzukiToken = DataGenerator.generateInitialToken(config);
+        SuzukiLogger.log("Generating token.\n");
+
     }
 
     /**
