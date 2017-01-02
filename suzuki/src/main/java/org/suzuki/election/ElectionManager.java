@@ -33,6 +33,7 @@ public class ElectionManager {
         electionBroadcastBody.setNodeId(config.getMyId());
 
         ElectionBroadcast electionBroadcast = new ElectionBroadcast();
+        electionBroadcast.setSenderId(config.getMyId());
         electionBroadcast.setValue(electionBroadcastBody);
 
         sender.broadcast(config.getMyId(), electionBroadcast);

@@ -45,7 +45,11 @@ public class SuzukiToken extends Message {
     }
 
     public void appendProcesses(List<Integer> nodeIds) {
-        getValue().getQueue().addAll(nodeIds);
+        nodeIds.forEach( nodeId -> {
+            if(!getValue().getQueue().contains(nodeId)) {
+                getValue().getQueue().add(nodeId);
+            }
+        });
     }
 
 }

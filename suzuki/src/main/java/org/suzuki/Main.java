@@ -51,11 +51,11 @@ public class Main {
                 if("exit".equals(s)) {
                     suzuki.close();
                     System.exit(0);
-                } else if("request".equals(s)) {
+                } else if("r".equals(s)) {
                     suzuki.executeLocked(() -> {
                         try {
                             SuzukiLogger.log("Accessing resource... ");
-                            Thread.sleep(5000);
+                            Thread.sleep(20000);
                             SuzukiLogger.log("Accessing resource... done.");
                         } catch (InterruptedException e) {
                             e.printStackTrace();
