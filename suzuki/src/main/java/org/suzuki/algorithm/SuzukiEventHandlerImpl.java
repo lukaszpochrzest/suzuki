@@ -5,6 +5,7 @@ import org.suzuki.algorithm.logging.SuzukiLogger;
 import org.suzuki.algorithm.queue.suzuki.SuzukiEventHandler;
 import org.suzuki.algorithm.utils.SuzukiRequestBuilder;
 import org.suzuki.communication.Sender;
+import org.suzuki.communication.tcp.client.Exception.SendException;
 import org.suzuki.config.Config;
 import org.suzuki.config.ConfigHolder;
 import org.suzuki.data.*;
@@ -78,15 +79,20 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler, ElectedListen
         if(suzukiToken != null) {  // not in CS cause its single threaded
 
             if(RN.numberOf(senderId) == suzukiToken.numberOf(senderId) + 1) {
-                sender.send(senderId, suzukiToken);
+                try {
+                    sender.send(senderId, suzukiToken);
 
-                // TODO remove
-                if(RN.numberOf(senderId) > suzukiToken.numberOf(senderId) + 1) {
-                    throw new RuntimeException();
+                    // TODO remove
+                    if (RN.numberOf(senderId) > suzukiToken.numberOf(senderId) + 1) {
+                        throw new RuntimeException();
+                    }
+                    // TODO remove
+
+                    suzukiToken = null;
+                } catch (SendException e) {
+                    //TODO better logging
+                    e.printStackTrace();
                 }
-                // TODO remove
-
-                suzukiToken = null;
             }
         }
 //        System.out.println("Handling suzukiRequest... done." + " RN: " + RN);
@@ -106,16 +112,33 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler, ElectedListen
 
         suzukiToken.appendProcesses(outstandingRequestProcesses(RN, suzukiToken));
 
-        if(!suzukiToken.getValue().getQueue().isEmpty()) {
+        boolean sent = false;
+        while(!suzukiToken.getValue().getQueue().isEmpty() && !sent) {
+            sent = sendSuzukiToken(suzukiToken);
+        }
+
+//        System.out.println("Handling suzukiToken... done." + " SuzukiToken: " + suzukiToken);
+        SuzukiLogger.stopEventHandling();
+    }
+
+    /**
+     *
+     * @param suzukiToken
+     * @return true if token sent successfully, false otherwise
+     */
+    private boolean sendSuzukiToken(SuzukiToken suzukiToken) {
+        try{
             int nodeId = suzukiToken.getValue().getQueue().get(0);
             suzukiToken.getValue().getQueue().remove(0);
             suzukiToken.setSenderId(config.getMyId());
             sender.send(nodeId, suzukiToken);
             this.suzukiToken = null;
-        }
 
-//        System.out.println("Handling suzukiToken... done." + " SuzukiToken: " + suzukiToken);
-        SuzukiLogger.stopEventHandling();
+            return true;
+        } catch(SendException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     // TODO refactor election handling

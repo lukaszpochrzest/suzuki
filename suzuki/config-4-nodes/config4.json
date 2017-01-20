@@ -1,0 +1,26 @@
+{
+  "port": 2348,
+  "myId": 4,
+  "nodes": [
+    {
+      "id": 1,
+      "host": "localhost",
+      "port": 2345
+    },
+    {
+      "id": 2,
+      "host": "localhost",
+      "port": 2346
+    },
+    {
+      "id": 3,
+      "host": "localhost",
+      "port": 2347
+    },
+    {
+      "id": 4,
+      "host": "localhost",
+      "port": 2348
+    }
+  ]
+}

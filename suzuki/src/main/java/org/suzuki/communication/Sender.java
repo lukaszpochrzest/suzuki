@@ -39,14 +39,9 @@ public class Sender {
         for(NodeConfig nodeConfig : config.getNodes()) {
             // TODO refactor
             if(senderId == nodeConfig.getId()) {
-                try {
-                    TCPClient tcpClient = new TCPClient(nodeConfig.getHost(), nodeConfig.getPort());
-                    SuzukiLogger.log("Sending " + message + " to " + senderId);
-                    tcpClient.send(message);
-                } catch (SendException e) {
-                    // TODO rethink
-                    e.printStackTrace();
-                }
+                TCPClient tcpClient = new TCPClient(nodeConfig.getHost(), nodeConfig.getPort());
+                SuzukiLogger.log("Sending " + message + " to " + senderId);
+                tcpClient.send(message);
                 return;
             }
         }
