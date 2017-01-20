@@ -2,6 +2,7 @@ package org.suzuki.election;
 
 import org.suzuki.config.Config;
 import org.suzuki.config.ConfigHolder;
+import org.suzuki.data.ElectBroadcast;
 import org.suzuki.data.ElectionBroadcast;
 import org.suzuki.data.ElectionOK;
 
@@ -59,6 +60,10 @@ public class ElectionNodeStateManager {
 //            // do nothing
 //        }
 
+    }
+
+    public void updateStateOn(ElectBroadcast electBroadcast) {
+        setState(ElectionNodeState.NOT_ELECTING_AT_ALL);
     }
 
     public void onStartElectionListening() {

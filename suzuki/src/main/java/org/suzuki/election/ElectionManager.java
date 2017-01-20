@@ -1,8 +1,10 @@
 package org.suzuki.election;
 
+import org.suzuki.algorithm.utils.ElectBroadcastBuilder;
 import org.suzuki.communication.Sender;
 import org.suzuki.config.Config;
 import org.suzuki.config.ConfigHolder;
+import org.suzuki.data.ElectBroadcast;
 import org.suzuki.data.ElectionBroadcast;
 import org.suzuki.data.ElectionBroadcastBody;
 import org.suzuki.data.ElectionOK;
@@ -20,10 +22,13 @@ public class ElectionManager {
 
     private ElectionNodeStateManager electionNodeStateManager;
 
+    private ElectBroadcastBuilder electBroadcastBuilder;
+
     public ElectionManager(Sender sender, ElectedListener electedListener) {
         this.config = ConfigHolder.getConfig();
         this.sender = sender;
         this.electionNodeStateManager = new ElectionNodeStateManager(electedListener);
+        this.electBroadcastBuilder = new ElectBroadcastBuilder();
     }
 
     public void electionBroadcast() {
@@ -40,6 +45,11 @@ public class ElectionManager {
 
         electionNodeStateManager.onStartBullying();
     }
+
+    public void electBroadcast() {
+        sender.broadcast(config.getMyId(), electBroadcastBuilder.build());
+    }
+
 
     public void handle(ElectionBroadcast electionBroadcast) {
 
@@ -65,6 +75,10 @@ public class ElectionManager {
 
     public void handle(ElectionStart electionStart) {
         electionNodeStateManager.onStartElectionListening();
+    }
+
+    public void handle(ElectBroadcast electBroadcast) {
+        electionNodeStateManager.updateStateOn(electBroadcast);
     }
 
 }

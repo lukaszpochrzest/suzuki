@@ -9,7 +9,6 @@ public class SuzukiRequestBuilder {
 
     private Config config;
 
-
     public SuzukiRequestBuilder() {
         this.config = ConfigHolder.getConfig();
     }
@@ -19,7 +18,7 @@ public class SuzukiRequestBuilder {
         value.setRequestNumber(requestNumber);
 
         SuzukiRequest suzukiRequest = new SuzukiRequest();
-        suzukiRequest.setSenderId(config.getMyId());
+        suzukiRequest.setSenderId(config.getMyId());    //TODO move to message constructor
 
         suzukiRequest.setValue(value);
 

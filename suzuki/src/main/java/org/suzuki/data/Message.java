@@ -12,6 +12,7 @@ public abstract class Message implements SuzukiEvent {
     public static final String TYPE_REQUEST = "request";
     public static final String TYPE_TOKEN = "token";
     public static final String TYPE_ELECTION_BROADCAST = "electionBroadcast";
+    public static final String TYPE_ELECT_BROADCAST = "electBroadcast";
     public static final String TYPE_ELECTION_OK = "electionOK";
 
 

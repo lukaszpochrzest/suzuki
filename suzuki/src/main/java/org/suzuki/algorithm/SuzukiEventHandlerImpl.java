@@ -7,10 +7,7 @@ import org.suzuki.algorithm.utils.SuzukiRequestBuilder;
 import org.suzuki.communication.Sender;
 import org.suzuki.config.Config;
 import org.suzuki.config.ConfigHolder;
-import org.suzuki.data.ElectionBroadcast;
-import org.suzuki.data.ElectionOK;
-import org.suzuki.data.SuzukiRequest;
-import org.suzuki.data.SuzukiToken;
+import org.suzuki.data.*;
 import org.suzuki.data.internal.ElectionStart;
 import org.suzuki.data.internal.RequestCS;
 import org.suzuki.election.ElectionManager;
@@ -129,6 +126,15 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler, ElectionManag
         SuzukiLogger.stopEventHandling();
     }
 
+    @Override
+    public void handle(ElectBroadcast electBroadcast) {
+        SuzukiLogger.startEventHandling(electBroadcast);
+
+        electionManager.handle(electBroadcast);
+
+        SuzukiLogger.stopEventHandling();
+    }
+
     // TODO refactor election handling
     @Override
     public void handle(ElectionOK electionOK) {
@@ -172,11 +178,13 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler, ElectionManag
         SuzukiLogger.stopEventHandling();
     }
 
+    //TODO refactor
     @Override
     public void onElected() {
 
         //TODO logger for election
         SuzukiLogger.log("\nElected");
+        electionManager.electBroadcast();
         suzukiToken = DataGenerator.generateInitialToken(config);
         SuzukiLogger.log("Generating token.\n");
 

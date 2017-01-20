@@ -1,9 +1,6 @@
 package org.suzuki.algorithm.queue.suzuki;
 
-import org.suzuki.data.ElectionBroadcast;
-import org.suzuki.data.ElectionOK;
-import org.suzuki.data.SuzukiRequest;
-import org.suzuki.data.SuzukiToken;
+import org.suzuki.data.*;
 import org.suzuki.data.internal.ElectionStart;
 import org.suzuki.data.internal.RequestCS;
 
@@ -25,6 +22,10 @@ public class SuzukiEventVisitor {
 
     public void visit(ElectionBroadcast electionBroadcast) {
         suzukiEventHandler.handle(electionBroadcast);
+    }
+
+    public void visit(ElectBroadcast electBroadcast) {
+        suzukiEventHandler.handle(electBroadcast);
     }
 
     public void visit(ElectionOK electionOK) {
