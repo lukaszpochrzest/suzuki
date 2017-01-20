@@ -10,6 +10,8 @@ import org.suzuki.config.ConfigHolder;
 import org.suzuki.data.*;
 import org.suzuki.data.internal.ElectionStart;
 import org.suzuki.data.internal.RequestCS;
+import org.suzuki.data.timeout.ElectionBroadcastTimeout;
+import org.suzuki.election.ElectedListener;
 import org.suzuki.election.ElectionManager;
 import org.suzuki.util.DataGenerator;
 
@@ -17,7 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class SuzukiEventHandlerImpl implements SuzukiEventHandler, ElectionManager.ElectedListener {
+public class SuzukiEventHandlerImpl implements SuzukiEventHandler, ElectedListener {
 
     private SuzukiToken suzukiToken;
 
@@ -178,13 +180,17 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler, ElectionManag
         SuzukiLogger.stopEventHandling();
     }
 
+    @Override
+    public void handle(ElectionBroadcastTimeout electionBroadcastTimeout) {
+        onElected();
+    }
+
     //TODO refactor
     @Override
     public void onElected() {
 
         //TODO logger for election
         SuzukiLogger.log("\nElected");
-        electionManager.electBroadcast();
         suzukiToken = DataGenerator.generateInitialToken(config);
         SuzukiLogger.log("Generating token.\n");
 
@@ -194,6 +200,9 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler, ElectionManag
      * @return outstanding request processes' nodeIds
      */
     private List<Integer> outstandingRequestProcesses(RN RN, SuzukiToken suzukiToken) {
+
+        SuzukiLogger.log("Doing outstanding processes. RN:" + RN.toString());
+
         List<Integer> result = new LinkedList<>();
 
 
@@ -202,7 +211,8 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler, ElectionManag
             Integer nodeId = entry.getKey();
             Integer number = entry.getValue();
 
-            if(number == suzukiToken.numberOf(nodeId) + 1) {
+//            if(number == suzukiToken.numberOf(nodeId) + 1) {
+            if(number >= suzukiToken.numberOf(nodeId) + 1) {
                 result.add(nodeId);
             }
 

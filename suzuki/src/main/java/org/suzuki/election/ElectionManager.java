@@ -9,12 +9,11 @@ import org.suzuki.data.ElectionBroadcast;
 import org.suzuki.data.ElectionBroadcastBody;
 import org.suzuki.data.ElectionOK;
 import org.suzuki.data.internal.ElectionStart;
+import org.suzuki.election.timeout.ElectionTimeouts;
 
-public class ElectionManager {
 
-    public interface ElectedListener {
-        void onElected();
-    }
+//TODO suzuki handler and election manager cant both implement ElectedListneer. Merge ElectionManager and ElectionStateManager wisely
+public class ElectionManager implements ElectedListener {
 
     private Sender sender;
 
@@ -24,11 +23,19 @@ public class ElectionManager {
 
     private ElectBroadcastBuilder electBroadcastBuilder;
 
+    private ElectionTimeouts electionTimeouts;
+
+    private ElectedListener electedListener;
+
     public ElectionManager(Sender sender, ElectedListener electedListener) {
         this.config = ConfigHolder.getConfig();
         this.sender = sender;
-        this.electionNodeStateManager = new ElectionNodeStateManager(electedListener);
+        this.electionTimeouts = new ElectionTimeouts();
+        //TODO wiser electedListner
+        this.electionNodeStateManager = new ElectionNodeStateManager(this, electionTimeouts);
         this.electBroadcastBuilder = new ElectBroadcastBuilder();
+        //TODO wiser electedListner
+        this.electedListener = electedListener;
     }
 
     public void electionBroadcast() {
@@ -43,13 +50,10 @@ public class ElectionManager {
 
         sender.broadcast(config.getMyId(), electionBroadcast);
 
+        electionTimeouts.startElectionBroadcastTimeout();
+
         electionNodeStateManager.onStartBullying();
     }
-
-    public void electBroadcast() {
-        sender.broadcast(config.getMyId(), electBroadcastBuilder.build());
-    }
-
 
     public void handle(ElectionBroadcast electionBroadcast) {
 
@@ -81,4 +85,9 @@ public class ElectionManager {
         electionNodeStateManager.updateStateOn(electBroadcast);
     }
 
+    @Override
+    public void onElected() {
+        sender.broadcast(config.getMyId(), electBroadcastBuilder.build());
+        electedListener.onElected();
+    }
 }

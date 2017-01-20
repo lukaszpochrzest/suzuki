@@ -35,9 +35,7 @@ public class Main {
             // TODO
 //                ConfigValidator.validate(config);
 
-            Suzuki suzuki = line.hasOption(CmdLineParser.ARG_TOKEN) ?
-                    new Suzuki(DataGenerator.generateInitialToken(ConfigHolder.getConfig())) :
-                    new Suzuki();
+            Suzuki suzuki = new Suzuki();
             suzuki.launch();
 
             TCPClient tcpClient = new TCPClient("localhost", ConfigHolder.getConfig().getPort());    //TODO arguments

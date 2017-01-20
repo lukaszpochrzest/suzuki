@@ -37,7 +37,6 @@ public class DataGenerator {
         return suzukiToken;
     }
 
-    // TODO election
     public static SuzukiToken generateInitialToken(Config config) {
 
         List<SuzukiTokenBodyElement> elements = new ArrayList<>(config.getNodes().size());

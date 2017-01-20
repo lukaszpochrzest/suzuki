@@ -5,6 +5,7 @@ import org.suzuki.config.ConfigHolder;
 import org.suzuki.data.ElectBroadcast;
 import org.suzuki.data.ElectionBroadcast;
 import org.suzuki.data.ElectionOK;
+import org.suzuki.election.timeout.ElectionTimeouts;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -17,10 +18,13 @@ public class ElectionNodeStateManager {
 
     private Config config = ConfigHolder.getConfig();
 
-    private ElectionManager.ElectedListener electedListener;
+    private ElectedListener electedListener;
 
-    public ElectionNodeStateManager(ElectionManager.ElectedListener electedListener) {
+    private ElectionTimeouts electionTimeouts;
+
+    public ElectionNodeStateManager(ElectedListener electedListener, ElectionTimeouts electionTimeouts) {
         this.electedListener = electedListener;
+        this.electionTimeouts = electionTimeouts;
     }
 
     public void updateStateOn(ElectionOK electionOK) {
@@ -42,6 +46,7 @@ public class ElectionNodeStateManager {
         // i've been chosen!
         if(config.getNodes().size() - 1 == okList.size()) {
             setState(ElectionNodeState.NOT_ELECTING_AT_ALL);
+            electionTimeouts.cancelElectionBroadcastTimeout();
             electedListener.onElected();
         }
 
@@ -54,6 +59,7 @@ public class ElectionNodeStateManager {
         } else if(ElectionNodeState.WAITING_FOR_BROADCAST_RESPONSES.equals(electionNodeState)) {
             if(electionBroadcast.getValue().getNodeId() > myId) {
                 setState(ElectionNodeState.ELECTION_LISTENING);
+                electionTimeouts.cancelElectionBroadcastTimeout();
             }
         }
 //        else {    // ElectionNodeState.ELECTION_LISTENING.equals(electionNodeState)

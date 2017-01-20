@@ -17,11 +17,6 @@ public class Suzuki {
         suzukiAlgorithm = new SuzukiAlgorithm();
     }
 
-    // hack until election algorithm is implemented TODO remove
-    public Suzuki(SuzukiToken suzukiToken) {
-        suzukiAlgorithm = new SuzukiAlgorithm(suzukiToken);
-    }
-
 
     public void launch() {
         suzukiAlgorithm.launch();

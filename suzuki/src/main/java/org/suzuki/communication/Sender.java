@@ -1,5 +1,6 @@
 package org.suzuki.communication;
 
+import org.suzuki.communication.tcp.client.Exception.SendException;
 import org.suzuki.communication.tcp.client.TCPClient;
 import org.suzuki.algorithm.logging.SuzukiLogger;
 import org.suzuki.config.Config;
@@ -22,10 +23,14 @@ public class Sender {
                 continue;
             }
             // TODO refactor
-            TCPClient tcpClient = new TCPClient(nodeConfig.getHost(), nodeConfig.getPort());
-            tcpClient.send(message);
+            try{
+                TCPClient tcpClient = new TCPClient(nodeConfig.getHost(), nodeConfig.getPort());
+                tcpClient.send(message);
+            } catch (SendException e) {
+                // TODO rethink
+                e.printStackTrace();
+            }
         }
-
     }
 
     public void send(int senderId, Message message) {
@@ -34,9 +39,14 @@ public class Sender {
         for(NodeConfig nodeConfig : config.getNodes()) {
             // TODO refactor
             if(senderId == nodeConfig.getId()) {
-                TCPClient tcpClient = new TCPClient(nodeConfig.getHost(), nodeConfig.getPort());
-                SuzukiLogger.log("Sending " + message + " to " + senderId);
-                tcpClient.send(message);
+                try {
+                    TCPClient tcpClient = new TCPClient(nodeConfig.getHost(), nodeConfig.getPort());
+                    SuzukiLogger.log("Sending " + message + " to " + senderId);
+                    tcpClient.send(message);
+                } catch (SendException e) {
+                    // TODO rethink
+                    e.printStackTrace();
+                }
                 return;
             }
         }

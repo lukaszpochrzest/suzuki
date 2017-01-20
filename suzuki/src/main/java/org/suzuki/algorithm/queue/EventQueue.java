@@ -6,16 +6,16 @@ public class EventQueue {
 
     private LinkedBlockingQueue<Object> messageQueue;
 
-    private EventQueueListener eventQueueListener;
-
     private EventQueueListeningThread eventQueueListeningThread;
 
-    public EventQueue(EventQueueListener eventQueueListener) {
-        this.eventQueueListener = eventQueueListener;
+    public EventQueue() {
         this.messageQueue = new LinkedBlockingQueue<>();
     }
 
-    public void startListening() {
+    public void startListening(EventQueueListener eventQueueListener) {
+        if(eventQueueListeningThread != null) {
+            throw new IllegalStateException();
+        }
         eventQueueListeningThread = new EventQueueListeningThread(messageQueue, eventQueueListener);
         eventQueueListeningThread.start();
     }

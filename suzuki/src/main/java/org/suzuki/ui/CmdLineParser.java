@@ -6,6 +6,7 @@ public class CmdLineParser {
 
     public static final String ARG_CONFIG = "config";
 
+    @Deprecated
     public static final String ARG_TOKEN = "token";
 
     private Options options = new Options();
