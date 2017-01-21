@@ -4,6 +4,7 @@ import org.suzuki.data.*;
 import org.suzuki.data.internal.ElectionStart;
 import org.suzuki.data.internal.RequestCS;
 import org.suzuki.data.timeout.ElectionBroadcastTimeout;
+import org.suzuki.data.timeout.SuzukiTokenTimeout;
 
 public class SuzukiEventVisitor {
 
@@ -43,6 +44,10 @@ public class SuzukiEventVisitor {
 
     public void visit(ElectionBroadcastTimeout electionBroadcastTimeout) {
         suzukiEventHandler.handle(electionBroadcastTimeout);
+    }
+
+    public void visit(SuzukiTokenTimeout suzukiTokenTimeout) {
+        suzukiEventHandler.handle(suzukiTokenTimeout);
     }
 
 }

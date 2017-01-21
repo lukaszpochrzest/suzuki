@@ -3,6 +3,7 @@ package org.suzuki.algorithm;
 import org.suzuki.Suzuki;
 import org.suzuki.algorithm.logging.SuzukiLogger;
 import org.suzuki.algorithm.queue.suzuki.SuzukiEventHandler;
+import org.suzuki.algorithm.timeout.SuzukiTimeouts;
 import org.suzuki.algorithm.utils.SuzukiRequestBuilder;
 import org.suzuki.communication.Sender;
 import org.suzuki.communication.tcp.client.Exception.SendException;
@@ -12,15 +13,17 @@ import org.suzuki.data.*;
 import org.suzuki.data.internal.ElectionStart;
 import org.suzuki.data.internal.RequestCS;
 import org.suzuki.data.timeout.ElectionBroadcastTimeout;
+import org.suzuki.data.timeout.SuzukiTokenTimeout;
 import org.suzuki.election.ElectedListener;
 import org.suzuki.election.ElectionManager;
+import org.suzuki.election.ElectionNodeState;
 import org.suzuki.util.DataGenerator;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class SuzukiEventHandlerImpl implements SuzukiEventHandler, ElectedListener {
+public class SuzukiEventHandlerImpl implements SuzukiEventHandler, ElectedListener, ElectionManager.SuzukiTokenKeeper {
 
     private SuzukiToken suzukiToken;
 
@@ -39,17 +42,9 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler, ElectedListen
     // TODO refactor election handling
     private ElectionManager electionManager;
 
-    // hack until election algorithm is implemented TODO remove
-    public SuzukiEventHandlerImpl(SuzukiToken suzukiToken) {
-        this.suzukiToken = suzukiToken;
-        initialize();
-    }
+    private SuzukiTimeouts suzukiTimeouts;
 
     public SuzukiEventHandlerImpl() {
-        initialize();
-    }
-
-    private void initialize() {
         this.config = ConfigHolder.getConfig();
         this.myId = config.getMyId();
         this.RN = new RN();
@@ -58,7 +53,9 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler, ElectedListen
 
         this.suzukiRequestBuilder = new SuzukiRequestBuilder();
 
-        this.electionManager = new ElectionManager(sender, this);
+        this.electionManager = new ElectionManager(sender, this, this);
+
+        this.suzukiTimeouts = new SuzukiTimeouts();
     }
 
     @Override
@@ -78,15 +75,15 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler, ElectedListen
         // if thing
         if(suzukiToken != null) {  // not in CS cause its single threaded
 
-            if(RN.numberOf(senderId) == suzukiToken.numberOf(senderId) + 1) {
+            if(RN.numberOf(senderId) >= suzukiToken.numberOf(senderId) + 1) {
                 try {
                     sender.send(senderId, suzukiToken);
 
-                    // TODO remove
-                    if (RN.numberOf(senderId) > suzukiToken.numberOf(senderId) + 1) {
-                        throw new RuntimeException();
-                    }
-                    // TODO remove
+//                    // TODO remove
+//                    if (RN.numberOf(senderId) > suzukiToken.numberOf(senderId) + 1) {
+//                        throw new RuntimeException();
+//                    }
+//                    // TODO remove
 
                     suzukiToken = null;
                 } catch (SendException e) {
@@ -103,18 +100,27 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler, ElectedListen
     public void handle(SuzukiToken suzukiToken) {
         SuzukiLogger.startEventHandling(suzukiToken);
 
-        this.suzukiToken = suzukiToken;
+        if( electionManager.getElectionNodeState()!= ElectionNodeState.NOT_ELECTING_AT_ALL ) {
 
-        runnableWithResource.run();
-        runnableWithResource = null;
+            //get rid of token
+            SuzukiLogger.log("Received suzukiToken from " + suzukiToken.getSenderId() + " while electing. Removing token.");
 
-        suzukiToken.setNumber(config.getMyId(), RN.numberOf(myId));
+        } else {
+            suzukiTimeouts.cancelSuzukiTokenTimeout();
 
-        suzukiToken.appendProcesses(outstandingRequestProcesses(RN, suzukiToken));
+            this.suzukiToken = suzukiToken;
 
-        boolean sent = false;
-        while(!suzukiToken.getValue().getQueue().isEmpty() && !sent) {
-            sent = sendSuzukiToken(suzukiToken);
+            runnableWithResource.run();
+            runnableWithResource = null;
+
+            suzukiToken.setNumber(config.getMyId(), RN.numberOf(myId));
+
+            suzukiToken.appendProcesses(outstandingRequestProcesses(RN, suzukiToken));
+
+            boolean sent = false;
+            while(!suzukiToken.getValue().getQueue().isEmpty() && !sent) {
+                sent = sendSuzukiToken(suzukiToken);
+            }
         }
 
 //        System.out.println("Handling suzukiToken... done." + " SuzukiToken: " + suzukiToken);
@@ -144,7 +150,12 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler, ElectedListen
     // TODO refactor election handling
     @Override
     public void handle(ElectionBroadcast electionBroadcast) {
+
         SuzukiLogger.startEventHandling(electionBroadcast);
+
+        suzukiToken = null;
+
+        suzukiTimeouts.cancelSuzukiTokenTimeout();
 
         electionManager.handle(electionBroadcast);
 
@@ -153,6 +164,7 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler, ElectedListen
 
     @Override
     public void handle(ElectBroadcast electBroadcast) {
+
         SuzukiLogger.startEventHandling(electBroadcast);
 
         electionManager.handle(electBroadcast);
@@ -163,6 +175,7 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler, ElectedListen
     // TODO refactor election handling
     @Override
     public void handle(ElectionOK electionOK) {
+
         //TODO logger for election
         SuzukiLogger.startEventHandling(electionOK);
 
@@ -186,6 +199,9 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler, ElectedListen
         RN.setNumber(myId, myUpdatedNumber);
         sender.broadcast(config.getMyId(), suzukiRequestBuilder.build(myUpdatedNumber));
 
+        suzukiTimeouts.startSuzukiTokenTimeout();
+
+
 //        System.out.println("Handling requestCS... done." + " RN: " + RN);
         SuzukiLogger.stopEventHandling();
     }
@@ -204,8 +220,24 @@ public class SuzukiEventHandlerImpl implements SuzukiEventHandler, ElectedListen
     }
 
     @Override
+    public boolean hasToken() {
+        return suzukiToken != null;
+    }
+
+    @Override
+    public void removeToken() {
+        suzukiToken = null;
+    }
+
+    @Override
     public void handle(ElectionBroadcastTimeout electionBroadcastTimeout) {
-        onElected();
+        //TODO WHAT A MESS!
+        electionManager.elected();
+    }
+
+    @Override
+    public void handle(SuzukiTokenTimeout suzukiTokenTimeout) {
+        electionManager.electionBroadcast();
     }
 
     //TODO refactor

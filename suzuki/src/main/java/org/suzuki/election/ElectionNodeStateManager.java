@@ -45,9 +45,7 @@ public class ElectionNodeStateManager {
 
         // i've been chosen!
         if(config.getNodes().size() - 1 == okList.size()) {
-            setState(ElectionNodeState.NOT_ELECTING_AT_ALL);
-            electionTimeouts.cancelElectionBroadcastTimeout();
-            electedListener.onElected();
+            elected();
         }
 
     }
@@ -108,4 +106,14 @@ public class ElectionNodeStateManager {
 
     }
 
+    public void elected() {
+        setState(ElectionNodeState.NOT_ELECTING_AT_ALL);
+        electionTimeouts.cancelElectionBroadcastTimeout();
+        electedListener.onElected();
+    }
+
+    //TODO remove this one
+    public ElectionNodeState getElectionNodeState() {
+        return electionNodeState;
+    }
 }

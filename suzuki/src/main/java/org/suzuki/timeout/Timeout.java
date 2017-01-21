@@ -1,4 +1,4 @@
-package org.suzuki.algorithm.timeout;
+package org.suzuki.timeout;
 
 import java.util.concurrent.*;
 

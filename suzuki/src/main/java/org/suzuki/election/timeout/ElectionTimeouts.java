@@ -1,6 +1,6 @@
 package org.suzuki.election.timeout;
 
-import org.suzuki.algorithm.timeout.Timeout;
+import org.suzuki.timeout.Timeout;
 
 public class ElectionTimeouts {
 
@@ -27,7 +27,11 @@ public class ElectionTimeouts {
     }
 
     public void cancelElectionBroadcastTimeout() {
-        electionBroadcastTimeout.cancel();
+        if(electionBroadcastTimeout != null) {
+            electionBroadcastTimeout.cancel();
+            electionBroadcastTimeout = null;
+        }
+
     }
 
 }

@@ -15,6 +15,15 @@ import org.suzuki.election.timeout.ElectionTimeouts;
 //TODO suzuki handler and election manager cant both implement ElectedListneer. Merge ElectionManager and ElectionStateManager wisely
 public class ElectionManager implements ElectedListener {
 
+    //TODO refactor (create some Election-Suzuki each-other aware layer)
+    public interface SuzukiTokenKeeper {
+
+        boolean hasToken();
+
+        void removeToken();
+
+    }
+
     private Sender sender;
 
     private Config config;
@@ -27,7 +36,9 @@ public class ElectionManager implements ElectedListener {
 
     private ElectedListener electedListener;
 
-    public ElectionManager(Sender sender, ElectedListener electedListener) {
+    private SuzukiTokenKeeper suzukiTokenKeeper;
+
+    public ElectionManager(Sender sender, ElectedListener electedListener, SuzukiTokenKeeper suzukiTokenKeeper) {
         this.config = ConfigHolder.getConfig();
         this.sender = sender;
         this.electionTimeouts = new ElectionTimeouts();
@@ -36,6 +47,7 @@ public class ElectionManager implements ElectedListener {
         this.electBroadcastBuilder = new ElectBroadcastBuilder();
         //TODO wiser electedListner
         this.electedListener = electedListener;
+        this.suzukiTokenKeeper = suzukiTokenKeeper;
     }
 
     public void electionBroadcast() {
@@ -56,6 +68,10 @@ public class ElectionManager implements ElectedListener {
     }
 
     public void handle(ElectionBroadcast electionBroadcast) {
+
+        if(suzukiTokenKeeper.hasToken()) {
+            suzukiTokenKeeper.removeToken();
+        }
 
         electionNodeStateManager.updateStateOn(electionBroadcast, config.getMyId());
 
@@ -85,9 +101,19 @@ public class ElectionManager implements ElectedListener {
         electionNodeStateManager.updateStateOn(electBroadcast);
     }
 
+    public void elected() {
+        electionNodeStateManager.elected();
+    }
+
     @Override
     public void onElected() {
         sender.broadcast(config.getMyId(), electBroadcastBuilder.build());
         electedListener.onElected();
     }
+
+    //TODO remove this one
+    public ElectionNodeState getElectionNodeState() {
+        return electionNodeStateManager.getElectionNodeState();
+    }
+
 }
