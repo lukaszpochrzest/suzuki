@@ -3,10 +3,10 @@ package org.suzuki.data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.suzuki.algorithm.queue.suzuki.SuzukiEvent;
+import org.suzuki.queue.event.Event;
 
 @ToString
-public abstract class Message implements SuzukiEvent {
+public abstract class Message implements Event {
 
     // TODO make some enum
     public static final String TYPE_REQUEST = "request";

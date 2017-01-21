@@ -17,6 +17,7 @@ public class SuzukiTimeouts {
 
     public void startSuzukiTokenTimeout() {
         if(suzukiTokenTimeout != null) {
+            System.out.println("Token timeuout tried again");
             //TODO  hmm algorithm works such that it can start broadcasts multiple times...
         } else {
             suzukiTokenTimeout = new Timeout();

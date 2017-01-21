@@ -1,9 +1,9 @@
 package org.suzuki.communication;
 
-import org.suzuki.algorithm.queue.EventQueueInstance;
 import org.suzuki.communication.tcp.server.TCPServer;
 import org.suzuki.data.Message;
 import org.suzuki.json.MessageParser;
+import org.suzuki.queue.SuzukiAndElectionAwareEventQueueManager;
 
 public class Receiver {
 
@@ -14,7 +14,7 @@ public class Receiver {
                 port,
                 jsonMessage -> {
                     Message message = MessageParser.toObject(jsonMessage);
-                    EventQueueInstance.put(message);
+                    SuzukiAndElectionAwareEventQueueManager.get().put(message);
                 }
         );
         tcpServer.start();

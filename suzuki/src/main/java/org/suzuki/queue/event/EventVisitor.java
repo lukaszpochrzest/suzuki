@@ -1,4 +1,4 @@
-package org.suzuki.algorithm.queue.suzuki;
+package org.suzuki.queue.event;
 
 import org.suzuki.data.*;
 import org.suzuki.data.internal.ElectionStart;
@@ -6,48 +6,48 @@ import org.suzuki.data.internal.RequestCS;
 import org.suzuki.data.timeout.ElectionBroadcastTimeout;
 import org.suzuki.data.timeout.SuzukiTokenTimeout;
 
-public class SuzukiEventVisitor {
+public class EventVisitor {
 
-    private SuzukiEventHandler suzukiEventHandler;
+    private EventHandler eventHandler;
 
-    public SuzukiEventVisitor(SuzukiEventHandler suzukiEventHandler) {
-        this.suzukiEventHandler = suzukiEventHandler;
+    public EventVisitor(EventHandler eventHandler) {
+        this.eventHandler = eventHandler;
     }
 
     public void visit(SuzukiRequest suzukiRequest) {
-        suzukiEventHandler.handle(suzukiRequest);
+        eventHandler.handle(suzukiRequest);
     }
 
     public void visit(SuzukiToken suzukiToken) {
-        suzukiEventHandler.handle(suzukiToken);
+        eventHandler.handle(suzukiToken);
     }
 
     public void visit(ElectionBroadcast electionBroadcast) {
-        suzukiEventHandler.handle(electionBroadcast);
+        eventHandler.handle(electionBroadcast);
     }
 
     public void visit(ElectBroadcast electBroadcast) {
-        suzukiEventHandler.handle(electBroadcast);
+        eventHandler.handle(electBroadcast);
     }
 
     public void visit(ElectionOK electionOK) {
-        suzukiEventHandler.handle(electionOK);
+        eventHandler.handle(electionOK);
     }
 
     public void visit(RequestCS requestCS) {
-        suzukiEventHandler.handle(requestCS);
+        eventHandler.handle(requestCS);
     }
 
     public void visit(ElectionStart electionStart) {
-        suzukiEventHandler.handle(electionStart);
+        eventHandler.handle(electionStart);
     }
 
     public void visit(ElectionBroadcastTimeout electionBroadcastTimeout) {
-        suzukiEventHandler.handle(electionBroadcastTimeout);
+        eventHandler.handle(electionBroadcastTimeout);
     }
 
     public void visit(SuzukiTokenTimeout suzukiTokenTimeout) {
-        suzukiEventHandler.handle(suzukiTokenTimeout);
+        eventHandler.handle(suzukiTokenTimeout);
     }
 
 }

@@ -1,4 +1,4 @@
-package org.suzuki.algorithm.queue;
+package org.suzuki.queue;
 
 public interface EventQueueListener {
 

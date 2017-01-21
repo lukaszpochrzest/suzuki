@@ -1,5 +1,6 @@
 package org.suzuki.election;
 
+import org.suzuki.SuzukiForElectionAPI;
 import org.suzuki.algorithm.utils.ElectBroadcastBuilder;
 import org.suzuki.communication.Sender;
 import org.suzuki.config.Config;
@@ -15,15 +16,6 @@ import org.suzuki.election.timeout.ElectionTimeouts;
 //TODO suzuki handler and election manager cant both implement ElectedListneer. Merge ElectionManager and ElectionStateManager wisely
 public class ElectionManager implements ElectedListener {
 
-    //TODO refactor (create some Election-Suzuki each-other aware layer)
-    public interface SuzukiTokenKeeper {
-
-        boolean hasToken();
-
-        void removeToken();
-
-    }
-
     private Sender sender;
 
     private Config config;
@@ -36,9 +28,9 @@ public class ElectionManager implements ElectedListener {
 
     private ElectedListener electedListener;
 
-    private SuzukiTokenKeeper suzukiTokenKeeper;
+    private SuzukiForElectionAPI suzukiForElectionAPI;
 
-    public ElectionManager(Sender sender, ElectedListener electedListener, SuzukiTokenKeeper suzukiTokenKeeper) {
+    public ElectionManager(Sender sender, ElectedListener electedListener, SuzukiForElectionAPI suzukiForElectionAPI) {
         this.config = ConfigHolder.getConfig();
         this.sender = sender;
         this.electionTimeouts = new ElectionTimeouts();
@@ -47,7 +39,7 @@ public class ElectionManager implements ElectedListener {
         this.electBroadcastBuilder = new ElectBroadcastBuilder();
         //TODO wiser electedListner
         this.electedListener = electedListener;
-        this.suzukiTokenKeeper = suzukiTokenKeeper;
+        this.suzukiForElectionAPI = suzukiForElectionAPI;
     }
 
     public void electionBroadcast() {
@@ -69,8 +61,8 @@ public class ElectionManager implements ElectedListener {
 
     public void handle(ElectionBroadcast electionBroadcast) {
 
-        if(suzukiTokenKeeper.hasToken()) {
-            suzukiTokenKeeper.removeToken();
+        if(suzukiForElectionAPI.hasToken()) {
+            suzukiForElectionAPI.removeToken();
         }
 
         electionNodeStateManager.updateStateOn(electionBroadcast, config.getMyId());

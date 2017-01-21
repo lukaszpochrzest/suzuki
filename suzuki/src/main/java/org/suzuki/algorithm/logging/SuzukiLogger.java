@@ -1,6 +1,6 @@
 package org.suzuki.algorithm.logging;
 
-import org.suzuki.algorithm.queue.suzuki.SuzukiEvent;
+import org.suzuki.queue.event.Event;
 
 import java.io.PrintStream;
 
@@ -12,14 +12,14 @@ public class SuzukiLogger {
 
     private static int deepness = DEFAULT_DEEPNESS;
 
-    public static  void startEventHandling(SuzukiEvent suzukiEvent) {
+    public static  void startEventHandling(Event event) {
 
         deepness = DEFAULT_DEEPNESS;
 
         out.println(
                 "\n"
                 + Prefixer.prefixes(deepness)
-                + " HANDLING [" + suzukiEvent + "]"
+                + " HANDLING [" + event + "]"
         );
 
         ++deepness;

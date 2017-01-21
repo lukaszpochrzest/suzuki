@@ -3,7 +3,7 @@ package org.suzuki.data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.suzuki.algorithm.queue.suzuki.SuzukiEventVisitor;
+import org.suzuki.queue.event.EventVisitor;
 
 import java.util.List;
 
@@ -19,8 +19,8 @@ public class SuzukiToken extends Message {
     }
 
     @Override
-    public void accept(SuzukiEventVisitor suzukiEventVisitor) {
-        suzukiEventVisitor.visit(this);
+    public void accept(EventVisitor eventVisitor) {
+        eventVisitor.visit(this);
     }
 
     public int numberOf(int nodeId) {

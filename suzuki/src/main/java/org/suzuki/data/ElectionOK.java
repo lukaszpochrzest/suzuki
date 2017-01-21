@@ -1,7 +1,7 @@
 package org.suzuki.data;
 
 import lombok.ToString;
-import org.suzuki.algorithm.queue.suzuki.SuzukiEventVisitor;
+import org.suzuki.queue.event.EventVisitor;
 
 @ToString(callSuper = true)
 public class ElectionOK extends Message {
@@ -11,8 +11,8 @@ public class ElectionOK extends Message {
     }
 
     @Override
-    public void accept(SuzukiEventVisitor suzukiEventVisitor) {
-        suzukiEventVisitor.visit(this);
+    public void accept(EventVisitor eventVisitor) {
+        eventVisitor.visit(this);
     }
 
 }

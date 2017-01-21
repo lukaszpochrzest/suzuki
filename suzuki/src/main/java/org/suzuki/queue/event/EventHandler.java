@@ -1,4 +1,4 @@
-package org.suzuki.algorithm.queue.suzuki;
+package org.suzuki.queue.event;
 
 import org.suzuki.data.*;
 import org.suzuki.data.internal.ElectionStart;
@@ -6,7 +6,7 @@ import org.suzuki.data.internal.RequestCS;
 import org.suzuki.data.timeout.ElectionBroadcastTimeout;
 import org.suzuki.data.timeout.SuzukiTokenTimeout;
 
-public interface SuzukiEventHandler {
+public interface EventHandler {
     
     void handle(SuzukiRequest suzukiRequest);
 

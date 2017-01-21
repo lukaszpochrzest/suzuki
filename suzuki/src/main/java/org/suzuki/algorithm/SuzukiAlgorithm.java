@@ -1,13 +1,12 @@
 package org.suzuki.algorithm;
 
 import org.suzuki.Suzuki;
-import org.suzuki.algorithm.queue.EventQueueInstance;
-import org.suzuki.algorithm.queue.suzuki.SuzukiEventQueueListener;
 import org.suzuki.communication.Receiver;
 import org.suzuki.config.Config;
 import org.suzuki.config.ConfigHolder;
 import org.suzuki.data.internal.ElectionStart;
 import org.suzuki.data.internal.RequestCS;
+import org.suzuki.queue.SuzukiAndElectionAwareEventQueueManager;
 
 public class SuzukiAlgorithm {
 
@@ -22,7 +21,7 @@ public class SuzukiAlgorithm {
 
 
     public void launch() {
-        EventQueueInstance.startListening(new SuzukiEventQueueListener(new SuzukiEventHandlerImpl()));
+        SuzukiAndElectionAwareEventQueueManager.initialize();
 
         receiver.launch(config.getPort());
     }
@@ -36,13 +35,13 @@ public class SuzukiAlgorithm {
     }
 
     private void requestCS(Suzuki.RunnableWithResource runnableWithResource) {
-        EventQueueInstance.put(new RequestCS(runnableWithResource));
+        SuzukiAndElectionAwareEventQueueManager.get().put(new RequestCS(runnableWithResource));
     }
 
     //TODO get rid of this
     @Deprecated
     public void triggerElection() {
-        EventQueueInstance.put(new ElectionStart());
+        SuzukiAndElectionAwareEventQueueManager.get().put(new ElectionStart());
     }
 
 }

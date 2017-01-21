@@ -13,7 +13,7 @@ public class RN {
     private LinkedHashMap<Integer, Integer> RN;
 
     public RN() {
-        // initialize map
+        // initializeQueue map
         Config config = ConfigHolder.getConfig();
         RN = new LinkedHashMap<>((int) Math.ceil(config.getNodes().size() / 0.75));
         config.getNodes().forEach(
@@ -31,6 +31,12 @@ public class RN {
 
     public Set<Map.Entry<Integer, Integer>> entrySet() {
         return RN.entrySet();
+    }
+
+    public void clear() {
+        for(Map.Entry<Integer, Integer> entry : RN.entrySet()) {
+            entry.setValue(0);
+        }
     }
 
     @Override

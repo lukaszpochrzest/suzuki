@@ -1,4 +1,4 @@
-package org.suzuki.algorithm.queue;
+package org.suzuki.queue;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -11,6 +11,19 @@ public class EventQueueListeningThread extends Thread {
     public EventQueueListeningThread(LinkedBlockingQueue<Object> messageQueue, EventQueueListener eventQueueListener) {
         this.eventQueueListener = eventQueueListener;
         this.messageQueue = messageQueue;
+    }
+
+    // TODO ThreadLocal
+    /**
+     * may be used only by curr thread
+     * @param eventQueueListener
+     */
+    public void changeEventQueueListener(EventQueueListener eventQueueListener) {
+        if(eventQueueListener == null) {
+            throw new IllegalArgumentException();
+        }
+        this.eventQueueListener = eventQueueListener;
+        System.out.print("\n\tCHANGED");
     }
 
     @Override
