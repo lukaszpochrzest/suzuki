@@ -4,7 +4,7 @@ import lombok.ToString;
 import org.suzuki.queue.event.Event;
 import org.suzuki.queue.event.EventVisitor;
 
-@ToString
+@ToString(includeFieldNames = false)
 public class ElectionStart implements Event {
 
     @Override

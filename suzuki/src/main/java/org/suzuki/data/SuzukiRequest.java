@@ -5,7 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.suzuki.queue.event.EventVisitor;
 
-@ToString(callSuper = true)
+@ToString(callSuper = true, includeFieldNames = false)
 public class SuzukiRequest extends Message {
 
     @Getter

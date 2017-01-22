@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@ToString
 public class SuzukiTokenBodyElement {
 
     @Getter
@@ -15,4 +14,8 @@ public class SuzukiTokenBodyElement {
     @Setter
     private Integer number;
 
+    @Override
+    public String toString() {
+        return "(nodeId=" + nodeId + ":" + number + ")";
+    }
 }

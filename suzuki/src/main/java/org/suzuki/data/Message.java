@@ -5,7 +5,6 @@ import lombok.Setter;
 import lombok.ToString;
 import org.suzuki.queue.event.Event;
 
-@ToString
 public abstract class Message implements Event {
 
     // TODO make some enum
@@ -24,4 +23,8 @@ public abstract class Message implements Event {
     @Setter
     public String type;
 
+    @Override
+    public String toString() {
+        return "(senderId=" + senderId +")";
+    }
 }

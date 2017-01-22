@@ -7,7 +7,7 @@ import org.suzuki.queue.event.EventVisitor;
 
 import java.util.List;
 
-@ToString(callSuper = true)
+@ToString(callSuper = true, includeFieldNames = false)
 public class SuzukiToken extends Message {
 
     @Getter

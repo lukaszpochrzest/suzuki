@@ -6,7 +6,7 @@ import lombok.ToString;
 
 import java.util.List;
 
-@ToString
+@ToString(includeFieldNames = false)
 public class SuzukiTokenBody {
 
     @Getter
