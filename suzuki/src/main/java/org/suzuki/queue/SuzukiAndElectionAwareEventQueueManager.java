@@ -1,6 +1,7 @@
 package org.suzuki.queue;
 
 import org.suzuki.algorithm.SuzukiEventHandler;
+import org.suzuki.algorithm.logging.SuzukiLogger;
 import org.suzuki.data.ElectionBroadcast;
 import org.suzuki.data.timeout.SuzukiTokenTimeout;
 import org.suzuki.election.ElectedListener;
@@ -112,6 +113,7 @@ public class SuzukiAndElectionAwareEventQueueManager {
             throw new IllegalArgumentException();
         }
         this.mode = mode;
+        SuzukiLogger.log("Switching to " + this.mode.name());
         eventQueue.changeEventQueueListener(this.mode.eventQueueListener);
     }
 

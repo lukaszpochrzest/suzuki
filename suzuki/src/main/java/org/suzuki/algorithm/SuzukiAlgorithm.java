@@ -1,6 +1,7 @@
 package org.suzuki.algorithm;
 
 import org.suzuki.Suzuki;
+import org.suzuki.algorithm.logging.SuzukiLogger;
 import org.suzuki.communication.Receiver;
 import org.suzuki.config.Config;
 import org.suzuki.config.ConfigHolder;
@@ -12,17 +13,15 @@ public class SuzukiAlgorithm {
 
     private Receiver receiver;
 
-    private Config config;
-
     public SuzukiAlgorithm() {
-        this.config = ConfigHolder.getConfig();
         this.receiver = new Receiver();
     }
 
-
     public void launch() {
-        SuzukiAndElectionAwareEventQueueManager.initialize();
+        Config config = ConfigHolder.getConfig();
 
+        SuzukiLogger.setMyId(config.getMyId());
+        SuzukiAndElectionAwareEventQueueManager.initialize();
         receiver.launch(config.getPort());
     }
 

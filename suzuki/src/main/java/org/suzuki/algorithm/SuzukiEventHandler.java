@@ -266,9 +266,9 @@ public class SuzukiEventHandler implements EventHandler, ElectedListener, Suzuki
     public void onElected() {
 
         //TODO logger for election
-        SuzukiLogger.log("\nElected");
+        SuzukiLogger.log("Elected");
         suzukiToken = DataGenerator.generateInitialToken(config);
-        SuzukiLogger.log("Generating token.\n");
+        SuzukiLogger.log("Generating token");
 
     }
 

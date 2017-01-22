@@ -12,6 +12,6 @@ public class ElectionBroadcastBody {
 
     @Override
     public String toString() {
-        return "(nodeId=" + nodeId + ")";
+        return "nodeId=" + nodeId;
     }
 }

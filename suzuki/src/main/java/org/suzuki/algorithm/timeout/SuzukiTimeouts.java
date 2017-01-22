@@ -1,5 +1,6 @@
 package org.suzuki.algorithm.timeout;
 
+import org.suzuki.algorithm.logging.SuzukiLogger;
 import org.suzuki.timeout.Timeout;
 
 public class SuzukiTimeouts {
@@ -17,7 +18,7 @@ public class SuzukiTimeouts {
 
     public void startSuzukiTokenTimeout() {
         if(suzukiTokenTimeout != null) {
-            System.out.println("Token timeuout tried again");
+            SuzukiLogger.log("Token timeuout tried again");
             //TODO  hmm algorithm works such that it can start broadcasts multiple times...
         } else {
             suzukiTokenTimeout = new Timeout();

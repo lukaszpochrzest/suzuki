@@ -12,6 +12,6 @@ public class ElectBroadcastBody {
 
     @Override
     public String toString() {
-        return "(electNodeId=" + electNodeId + ")";
+        return "electNodeId=" + electNodeId;
     }
 }

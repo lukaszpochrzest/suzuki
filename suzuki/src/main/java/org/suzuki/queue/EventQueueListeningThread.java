@@ -1,5 +1,7 @@
 package org.suzuki.queue;
 
+import org.suzuki.algorithm.logging.SuzukiLogger;
+
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class EventQueueListeningThread extends Thread {
@@ -23,7 +25,6 @@ public class EventQueueListeningThread extends Thread {
             throw new IllegalArgumentException();
         }
         this.eventQueueListener = eventQueueListener;
-        System.out.print("\n\tCHANGED");
     }
 
     @Override

@@ -5,7 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.suzuki.queue.event.EventVisitor;
 
-@ToString(callSuper = true, includeFieldNames = false)
+@ToString(includeFieldNames = false)
 public class ElectionBroadcast extends Message {
 
     @Getter
