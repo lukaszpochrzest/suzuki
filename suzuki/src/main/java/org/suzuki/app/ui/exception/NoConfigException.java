@@ -1,4 +1,4 @@
-package org.suzuki.ui.exception;
+package org.suzuki.app.ui.exception;
 
 public class NoConfigException extends RuntimeException {
 

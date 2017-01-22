@@ -1,6 +1,6 @@
-package org.suzuki.ui.io;
+package org.suzuki.app.ui.io;
 
-import org.suzuki.ui.io.exception.FileReadException;
+import org.suzuki.app.ui.io.exception.FileReadException;
 
 import java.io.BufferedReader;
 import java.io.IOException;

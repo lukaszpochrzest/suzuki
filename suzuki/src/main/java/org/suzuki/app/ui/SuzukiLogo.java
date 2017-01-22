@@ -1,4 +1,4 @@
-package org.suzuki.ui;
+package org.suzuki.app.ui;
 
 public class SuzukiLogo {
 

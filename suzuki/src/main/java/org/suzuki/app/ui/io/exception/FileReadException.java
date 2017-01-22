@@ -1,4 +1,4 @@
-package org.suzuki.ui.io.exception;
+package org.suzuki.app.ui.io.exception;
 
 public class FileReadException extends RuntimeException {
     public FileReadException() {

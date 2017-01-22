@@ -3,19 +3,21 @@ package org.suzuki;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 import org.suzuki.algorithm.logging.SuzukiLogger;
+import org.suzuki.app.resource.Resource;
 import org.suzuki.communication.tcp.client.TCPClient;
 import org.suzuki.config.ConfigHolder;
 import org.suzuki.config.ConfigParser;
 import org.suzuki.config.exception.ConfigParseException;
 import org.suzuki.json.MessageParser;
-import org.suzuki.ui.CmdLineParser;
-import org.suzuki.ui.SuzukiLogo;
-import org.suzuki.ui.exception.NoConfigException;
-import org.suzuki.ui.io.FileReader;
-import org.suzuki.ui.io.exception.FileReadException;
+import org.suzuki.app.ui.CmdLineParser;
+import org.suzuki.app.ui.SuzukiLogo;
+import org.suzuki.app.ui.exception.NoConfigException;
+import org.suzuki.app.ui.io.FileReader;
+import org.suzuki.app.ui.io.exception.FileReadException;
 import org.suzuki.util.DataGenerator;
 
 import java.io.Console;
+import java.io.IOException;
 
 public class Main {
 
@@ -41,6 +43,7 @@ public class Main {
             TCPClient tcpClient = new TCPClient("localhost", ConfigHolder.getConfig().getPort());    //TODO arguments
 
             Console console = System.console();
+            Resource resource = new Resource(Resource.RESOURCE_URL);
             while(true) {
                 String s = console.readLine();
 
@@ -51,14 +54,22 @@ public class Main {
                     System.exit(0);
                 } else if("r".equals(s)) {
                     suzuki.executeLocked(() -> {
+//                        try {
+//                            SuzukiLogger.log("Accessing resource... ");
+//                            Thread.sleep(20000);
+//                            SuzukiLogger.log("Accessing resource... done.");
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
                         try {
-                            SuzukiLogger.log("Accessing resource... ");
-                            Thread.sleep(20000);
-                            SuzukiLogger.log("Accessing resource... done.");
-                        } catch (InterruptedException e) {
+                            resource.get();
+                            resource.set(1);
+                            resource.get();
+                            resource.set(0);
+//                            resource.get();
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
-
                     });
                 } else if("elect".equals(s)) {
                     suzuki.triggerElection();
