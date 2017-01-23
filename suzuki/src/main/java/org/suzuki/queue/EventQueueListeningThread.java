@@ -34,6 +34,8 @@ public class EventQueueListeningThread extends Thread {
                 eventQueueListener.handle(messageQueue.take());
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);  //TODO exception handling
+            } catch(Exception e) {
+                e.printStackTrace();
             }
         }
     }

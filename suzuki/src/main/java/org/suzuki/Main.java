@@ -54,22 +54,22 @@ public class Main {
                     System.exit(0);
                 } else if("r".equals(s)) {
                     suzuki.executeLocked(() -> {
-//                        try {
-//                            SuzukiLogger.log("Accessing resource... ");
-//                            Thread.sleep(20000);
-//                            SuzukiLogger.log("Accessing resource... done.");
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
-//                        }
                         try {
-                            resource.get();
-                            resource.set(1);
-                            resource.get();
-                            resource.set(0);
-//                            resource.get();
-                        } catch (IOException e) {
+                            SuzukiLogger.log("Accessing resource... ");
+                            Thread.sleep(10000);
+                            SuzukiLogger.log("Accessing resource... done.");
+                        } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
+//                        try {
+//                            resource.get();
+//                            resource.set(1);
+//                            resource.get();
+//                            resource.set(0);
+////                            resource.get();
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
                     });
                 } else if("elect".equals(s)) {
                     suzuki.triggerElection();

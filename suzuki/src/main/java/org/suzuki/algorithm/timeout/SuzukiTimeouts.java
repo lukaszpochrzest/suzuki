@@ -6,7 +6,7 @@ import org.suzuki.timeout.Timeout;
 public class SuzukiTimeouts {
 
     // TODO make it configurable
-    private static final int TIMEOUT_SUZUKI_TOKEN = 40000;
+    private static final int TIMEOUT_SUZUKI_TOKEN  = 100000;
 
     private Timeout suzukiTokenTimeout;
 

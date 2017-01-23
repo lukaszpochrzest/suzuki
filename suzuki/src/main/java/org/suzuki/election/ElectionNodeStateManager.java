@@ -68,6 +68,7 @@ public class ElectionNodeStateManager {
 
     public void updateStateOn(ElectBroadcast electBroadcast) {
         setState(ElectionNodeState.NOT_ELECTING_AT_ALL);
+        electionTimeouts.cancelElectionBroadcastTimeout();
     }
 
     public void onStartElectionListening() {

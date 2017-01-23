@@ -20,7 +20,6 @@ public class MessageParser {
         String type = obj.get("type").getAsString();
 
         Class<? extends Message> clazz = messageTypeMapper.classOf(type);
-
         return gson.fromJson(json, clazz);
     }
 
