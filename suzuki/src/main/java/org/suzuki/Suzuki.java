@@ -30,9 +30,4 @@ public class Suzuki {
         suzukiAlgorithm.close();
     }
 
-    @Deprecated
-    public void triggerElection() {
-        suzukiAlgorithm.triggerElection();
-    }
-
 }

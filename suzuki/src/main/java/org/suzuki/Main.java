@@ -71,8 +71,6 @@ public class Main {
 //                            e.printStackTrace();
 //                        }
                     });
-                } else if("elect".equals(s)) {
-                    suzuki.triggerElection();
                 } else if("debugRequest".equals(s)) {
                     String suzukiRequestJson = MessageParser.toJson(DataGenerator.generateRequest());
                     tcpClient.send(suzukiRequestJson);

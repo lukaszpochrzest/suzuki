@@ -204,16 +204,15 @@ public class SuzukiEventHandler implements EventHandler, ElectedListener, Suzuki
         if(suzukiToken != null) {
             requestCS.getRunnableWithResource().run();
             return;
+        } else {
+            this.runnableWithResource = requestCS.getRunnableWithResource();
+
+            int myUpdatedNumber = RN.numberOf(myId) + 1;
+            RN.setNumber(myId, myUpdatedNumber);
+            sender.broadcast(config.getMyId(), suzukiRequestBuilder.build(myUpdatedNumber));
+
+            suzukiTimeouts.startSuzukiTokenTimeout();
         }
-
-        this.runnableWithResource = requestCS.getRunnableWithResource();
-
-        int myUpdatedNumber = RN.numberOf(myId) + 1;
-        RN.setNumber(myId, myUpdatedNumber);
-        sender.broadcast(config.getMyId(), suzukiRequestBuilder.build(myUpdatedNumber));
-
-        suzukiTimeouts.startSuzukiTokenTimeout();
-
 
 //        System.out.println("Handling requestCS... done." + " RN: " + RN);
         SuzukiLogger.stopEventHandling();
@@ -221,17 +220,7 @@ public class SuzukiEventHandler implements EventHandler, ElectedListener, Suzuki
 
     @Override
     public void handle(ElectionStart electionStart) {
-        //TODO logger for election
-        SuzukiLogger.startEventHandling(electionStart);
-
-        throw new IllegalStateException();
-
-//        electionManager.handle(electionStart);
-//
-//        //  not necessary should iit here //TODO another mssage for this one
-//        electionManager.electionBroadcast();
-//
-//        SuzukiLogger.stopEventHandling();
+        throw new UnsupportedOperationException();
     }
 
     @Override

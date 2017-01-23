@@ -10,6 +10,7 @@ import org.suzuki.data.ElectionBroadcast;
 import org.suzuki.data.ElectionBroadcastBody;
 import org.suzuki.data.ElectionOK;
 import org.suzuki.data.internal.ElectionStart;
+import org.suzuki.data.internal.RequestCS;
 import org.suzuki.election.timeout.ElectionTimeouts;
 
 
@@ -29,6 +30,8 @@ public class ElectionManager implements ElectedListener {
     private ElectedListener electedListener;
 
     private SuzukiForElectionAPI suzukiForElectionAPI;
+
+    private RequestCS requestCSReceivedDuringElection = null;
 
     public ElectionManager(Sender sender, ElectedListener electedListener, SuzukiForElectionAPI suzukiForElectionAPI) {
         this.config = ConfigHolder.getConfig();
@@ -85,12 +88,24 @@ public class ElectionManager implements ElectedListener {
         electionNodeStateManager.updateStateOn(electionOK);
     }
 
-    public void handle(ElectionStart electionStart) {
-        electionNodeStateManager.onStartElectionListening();
-    }
-
     public void handle(ElectBroadcast electBroadcast) {
         electionNodeStateManager.updateStateOn(electBroadcast);
+    }
+
+    public void handle(RequestCS requestCS) {
+        requestCSReceivedDuringElection = requestCS;
+
+        ElectionNodeState state = electionNodeStateManager.getElectionNodeState();
+        if(ElectionNodeState.WAITING_FOR_BROADCAST_RESPONSES.equals(state)) {
+            // nth to change
+        } else if(ElectionNodeState.NOT_ELECTING_AT_ALL.equals(state)) {
+            electionNodeStateManager.onStartElectionListening();
+            electionBroadcast();
+        } else if(ElectionNodeState.ELECTION_LISTENING.equals(state)) {
+            // nth to change
+        } else {
+            throw new IllegalStateException();
+        }
     }
 
     public void elected() {
@@ -108,4 +123,7 @@ public class ElectionManager implements ElectedListener {
         return electionNodeStateManager.getElectionNodeState();
     }
 
+    public RequestCS getRequestCSReceivedDuringElection() {
+        return requestCSReceivedDuringElection;
+    }
 }

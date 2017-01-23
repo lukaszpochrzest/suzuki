@@ -27,7 +27,7 @@ public class ElectionEventHandler implements EventHandler, ElectedListener, Elec
 
     @Override
     public void onElected() {
-        SuzukiAndElectionAwareEventQueueManager.get().onElectionFinishedElected();
+        SuzukiAndElectionAwareEventQueueManager.get().onElectionFinishedElected(electionManager.getRequestCSReceivedDuringElection());
     }
 
     @Override
@@ -70,7 +70,7 @@ public class ElectionEventHandler implements EventHandler, ElectedListener, Elec
 
         electionManager.handle(electBroadcast);
 
-        SuzukiAndElectionAwareEventQueueManager.get().onElectionFinishedNotElected();
+        SuzukiAndElectionAwareEventQueueManager.get().onElectionFinishedNotElected(electionManager.getRequestCSReceivedDuringElection());
 
         SuzukiLogger.stopEventHandling();
     }
@@ -87,21 +87,17 @@ public class ElectionEventHandler implements EventHandler, ElectedListener, Elec
 
     @Override
     public void handle(RequestCS requestCS) {
-        //TODO sth wiser
-        throw new IllegalStateException();
+        SuzukiLogger.startEventHandling(requestCS);
+
+        electionManager.handle(requestCS);
+
+        SuzukiLogger.stopEventHandling();
     }
 
     @Override
+    @Deprecated
     public void handle(ElectionStart electionStart) {
-        //TODO logger for election
-        SuzukiLogger.startEventHandling(electionStart);
-
-        electionManager.handle(electionStart);
-
-        //  not necessary should iit here //TODO another mssage for this one
-        electionManager.electionBroadcast();
-
-        SuzukiLogger.stopEventHandling();
+        throw new UnsupportedOperationException();
     }
 
     @Override

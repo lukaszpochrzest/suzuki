@@ -3,6 +3,7 @@ package org.suzuki.queue;
 import org.suzuki.algorithm.SuzukiEventHandler;
 import org.suzuki.algorithm.logging.SuzukiLogger;
 import org.suzuki.data.ElectionBroadcast;
+import org.suzuki.data.internal.RequestCS;
 import org.suzuki.data.timeout.SuzukiTokenTimeout;
 import org.suzuki.election.ElectedListener;
 import org.suzuki.election.ElectionEventHandler;
@@ -80,16 +81,24 @@ public class SuzukiAndElectionAwareEventQueueManager {
     }
 
     //TODO ThreadLocal
-    public void onElectionFinishedElected() {
+    public void onElectionFinishedElected(RequestCS requestCSReceivedDuringElectionNullable) {
         switchTo(Mode.SUZUKI);
 
         //TODO should directly access handler handler here
         suzukiEventHandler.onElected();
+
+        if(requestCSReceivedDuringElectionNullable != null) {
+            put(requestCSReceivedDuringElectionNullable);
+        }
     }
 
     //TODO ThreadLocal
-    public void onElectionFinishedNotElected() {
+    public void onElectionFinishedNotElected(RequestCS requestCSReceivedDuringElectionNullable) {
         switchTo(Mode.SUZUKI);
+
+        if(requestCSReceivedDuringElectionNullable != null) {
+            put(requestCSReceivedDuringElectionNullable);
+        }
     }
 
     //TODO ThreadLocal

@@ -37,10 +37,4 @@ public class SuzukiAlgorithm {
         SuzukiAndElectionAwareEventQueueManager.get().put(new RequestCS(runnableWithResource));
     }
 
-    //TODO get rid of this
-    @Deprecated
-    public void triggerElection() {
-        SuzukiAndElectionAwareEventQueueManager.get().put(new ElectionStart());
-    }
-
 }
