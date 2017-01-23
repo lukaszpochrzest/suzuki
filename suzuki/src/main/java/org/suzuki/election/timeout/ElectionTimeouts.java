@@ -1,11 +1,11 @@
 package org.suzuki.election.timeout;
 
+import org.suzuki.config.ConfigHolder;
 import org.suzuki.timeout.Timeout;
 
 public class ElectionTimeouts {
 
-    // TODO make it configurable
-    private static final int TIMEOUT_ELECTION_BROADCAST = 20000;
+    private final int timeoutElectionResponses;
 
     private Timeout electionBroadcastTimeout;
 
@@ -13,6 +13,7 @@ public class ElectionTimeouts {
 
     public ElectionTimeouts() {
         this.electionBroadcastTimeoutHandler = new ElectionBroadcastTimeoutHandler();
+        this.timeoutElectionResponses = ConfigHolder.getConfig().getElectionResponsesTimeout();
     }
 
     public void startElectionBroadcastTimeout() {
@@ -22,7 +23,7 @@ public class ElectionTimeouts {
             //TODO  shouldnt we change it
         } else {
             electionBroadcastTimeout = new Timeout();
-            electionBroadcastTimeout.executeOnTimeout(electionBroadcastTimeoutHandler, TIMEOUT_ELECTION_BROADCAST);
+            electionBroadcastTimeout.executeOnTimeout(electionBroadcastTimeoutHandler, timeoutElectionResponses);
         }
     }
 

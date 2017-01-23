@@ -1,12 +1,12 @@
 package org.suzuki.algorithm.timeout;
 
 import org.suzuki.algorithm.logging.SuzukiLogger;
+import org.suzuki.config.ConfigHolder;
 import org.suzuki.timeout.Timeout;
 
 public class SuzukiTimeouts {
 
-    // TODO make it configurable
-    private static final int TIMEOUT_SUZUKI_TOKEN  = 100000;
+    private final int timeoutReceiveToken;
 
     private Timeout suzukiTokenTimeout;
 
@@ -14,6 +14,7 @@ public class SuzukiTimeouts {
 
     public SuzukiTimeouts() {
         this.suzukiTokenTimeoutHandler = new SuzukiTokenTimeoutHandler();
+        this.timeoutReceiveToken = ConfigHolder.getConfig().getReceiveTokenTimeout();
     }
 
     public void startSuzukiTokenTimeout() {
@@ -22,7 +23,7 @@ public class SuzukiTimeouts {
             //TODO  hmm algorithm works such that it can start broadcasts multiple times...
         } else {
             suzukiTokenTimeout = new Timeout();
-            suzukiTokenTimeout.executeOnTimeout(suzukiTokenTimeoutHandler, TIMEOUT_SUZUKI_TOKEN);
+            suzukiTokenTimeout.executeOnTimeout(suzukiTokenTimeoutHandler, timeoutReceiveToken);
         }
     }
 

@@ -22,5 +22,7 @@
       "host": "192.168.43.72",
       "port": 7782
     }
-  ]
+  ],
+  "electionResponsesTimeout": 20000,
+  "receiveTokenTimeout": 100000
 }

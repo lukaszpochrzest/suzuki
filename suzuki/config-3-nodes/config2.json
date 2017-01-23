@@ -17,5 +17,7 @@
       "host": "localhost",
       "port": 2347
     }
-  ]
+  ],
+  "electionResponsesTimeout": 20000,
+  "receiveTokenTimeout": 100000
 }

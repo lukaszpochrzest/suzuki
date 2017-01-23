@@ -21,6 +21,14 @@ public class Config {
     @Setter
     private List<NodeConfig> nodes;
 
+    @Getter
+    @Setter
+    private int electionResponsesTimeout;
+
+    @Getter
+    @Setter
+    private int receiveTokenTimeout;
+
     public int getIndexOf(int nodeId) {
 
         int i = 0;
