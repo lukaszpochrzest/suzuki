@@ -4,82 +4,56 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 import org.suzuki.algorithm.logging.SuzukiLogger;
 import org.suzuki.app.resource.Resource;
-import org.suzuki.communication.tcp.client.TCPClient;
 import org.suzuki.config.ConfigHolder;
 import org.suzuki.config.ConfigParser;
 import org.suzuki.config.exception.ConfigParseException;
-import org.suzuki.json.MessageParser;
 import org.suzuki.app.ui.CmdLineParser;
 import org.suzuki.app.ui.SuzukiLogo;
 import org.suzuki.app.ui.exception.NoConfigException;
 import org.suzuki.app.ui.io.FileReader;
 import org.suzuki.app.ui.io.exception.FileReadException;
-import org.suzuki.util.DataGenerator;
 
 import java.io.Console;
 import java.io.IOException;
 
+import static org.suzuki.app.ui.CmdLineParser.*;
+
 public class Main {
 
     public static void main(String[] args) {
+        Main app = new Main();
+        app.run(args);
+    }
+
+    private final Resource herokuResource = new Resource(Resource.RESOURCE_URL_HEROKU);
+
+    private Suzuki suzuki;
+
+    private CommandLine line;
+
+    public void run(String[] args) {
         System.out.println(SuzukiLogo.SUZUKI_LOGO);
 
         try {
-            CmdLineParser cmdLineParser = new CmdLineParser();
-            CommandLine line = cmdLineParser.getLine(args);
+            readConfig(args);
 
-            if (!line.hasOption(CmdLineParser.ARG_CONFIG)) {
-                throw new NoConfigException();
-            }
-
-            String configFile = FileReader.read(line.getOptionValue(CmdLineParser.ARG_CONFIG));
-            ConfigHolder.setConfig(ConfigParser.parse(configFile));
-            // TODO
-//                ConfigValidator.validate(config);
-
-            Suzuki suzuki = new Suzuki();
+            suzuki = new Suzuki();
             suzuki.launch();
 
-            TCPClient tcpClient = new TCPClient("localhost", ConfigHolder.getConfig().getPort());    //TODO arguments
-
             Console console = System.console();
-            Resource resource = new Resource(Resource.RESOURCE_URL);
             while(true) {
                 String s = console.readLine();
 
-                // options here TODO refactor
-
                 if("exit".equals(s)) {
-                    suzuki.close();
-                    System.exit(0);
+                    exit();
                 } else if("r".equals(s)) {
-                    suzuki.executeLocked(() -> {
-                        try {
-                            SuzukiLogger.log("Accessing resource... ");
-                            Thread.sleep(10000);
-                            SuzukiLogger.log("Accessing resource... done.");
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-//                        try {
-//                            resource.get();
-//                            resource.set(1);
-//                            resource.get();
-//                            resource.set(0);
-////                            resource.get();
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-                    });
-                } else if("debugRequest".equals(s)) {
-                    String suzukiRequestJson = MessageParser.toJson(DataGenerator.generateRequest());
-                    tcpClient.send(suzukiRequestJson);
+                    suzuki.executeLocked(this::accessResource);
                 } else {
                     System.out.println("No such command");
                 }
             }
 
-        } catch (ParseException e) {    //TODO get rid of this block ?
+        } catch (ParseException e) {
             e.printStackTrace();
             System.exit(1);
         } catch (FileReadException e) {
@@ -93,6 +67,51 @@ public class Main {
             System.exit(4);
         }
 
+    }
+
+    private void readConfig(String args[]) throws ParseException {
+        CmdLineParser cmdLineParser = new CmdLineParser();
+        line = cmdLineParser.getLine(args);
+
+        if (!line.hasOption(ARG_CONFIG)) {
+            throw new NoConfigException();
+        }
+
+        String configFile = FileReader.read(line.getOptionValue(ARG_CONFIG));
+        ConfigHolder.setConfig(ConfigParser.parse(configFile));
+    }
+
+    private void accessResource() {
+        if (line.hasOption(ARG_FAKE)) {
+            accessFake();
+        } else {
+            accessHeroku();
+        }
+    }
+
+    private void accessHeroku() {
+        try {
+            herokuResource.get();
+            herokuResource.set(1);
+            herokuResource.get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void accessFake() {
+        try {
+            SuzukiLogger.log("Accessing resource... ");
+            Thread.sleep(10000);
+            SuzukiLogger.log("Accessing resource... done.");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void exit() {
+        suzuki.close();
+        System.exit(0);
     }
 
 }

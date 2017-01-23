@@ -20,7 +20,7 @@ import static org.apache.http.HttpHeaders.CONTENT_TYPE;
 
 public class Resource {
 
-    public static final String RESOURCE_URL = "https://evening-peak-26255.herokuapp.com/";
+    public static final String RESOURCE_URL_HEROKU = "https://evening-peak-26255.herokuapp.com/";
 
     private final String url;
 

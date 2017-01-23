@@ -6,8 +6,7 @@ public class CmdLineParser {
 
     public static final String ARG_CONFIG = "config";
 
-    @Deprecated
-    public static final String ARG_TOKEN = "token";
+    public static final String ARG_FAKE = "fake";
 
     private Options options = new Options();
 
@@ -26,9 +25,9 @@ public class CmdLineParser {
         );
         options.addOption(
                 Option.builder()
-                        .longOpt(ARG_TOKEN)
+                        .longOpt(ARG_FAKE)
                         .optionalArg(true)
-                        .desc("pretends to have token at startup")
+                        .desc("use fake resource")
                         .build()
         );
     }
