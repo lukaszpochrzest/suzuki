@@ -103,7 +103,9 @@ public class ElectionEventHandler implements EventHandler, ElectedListener, Elec
     @Override
     public void handle(ElectionBroadcastTimeout electionBroadcastTimeout) {
 //        //TODO WHAT A MESS!
+        SuzukiLogger.startEventHandling(electionBroadcastTimeout);
         electionManager.elected();
+        SuzukiLogger.stopEventHandling();
     }
 
     @Override

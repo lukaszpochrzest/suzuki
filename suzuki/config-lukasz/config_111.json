@@ -32,5 +32,7 @@
       "host": "192.168.43.55",
       "port": 2222
     }
-  ]
+  ],
+  "electionResponsesTimeout": 20000,
+  "receiveTokenTimeout": 100000
 }

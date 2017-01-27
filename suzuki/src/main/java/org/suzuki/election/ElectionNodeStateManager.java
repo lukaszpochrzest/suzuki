@@ -45,6 +45,7 @@ public class ElectionNodeStateManager {
 
         // i've been chosen!
         if(config.getNodes().size() - 1 == okList.size()) {
+            System.out.println("OKList: " + okList);
             elected();
         }
 
